@@ -10,7 +10,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
 import ru.sfedu.mmcs.portfolio.db.SQLiteData;
@@ -22,11 +21,8 @@ import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.JLabel;
 import javax.swing.BoxLayout;
-import java.awt.event.InputMethodListener;
-import java.text.AttributedCharacterIterator;
 import java.util.ArrayList;
 import java.util.List;
-import java.awt.event.InputMethodEvent;
 
 public class frmActiveChooser extends JDialog {
 
