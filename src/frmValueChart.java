@@ -21,6 +21,7 @@ public class frmValueChart extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 
 	public frmValueChart(AnalyzerPortfolio data, Portfolio portfolio, Date dateFrom, Date dateTo) {
+		setTitle("График стоимости портфеля");
 		setModal(true);
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());

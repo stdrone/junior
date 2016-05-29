@@ -30,6 +30,7 @@ public class frmPortfolio extends JDialog {
 	 */
 	@SuppressWarnings("serial")
 	public frmPortfolio(AnalyzerPortfolio data) {
+		setTitle("Рассчитанные портфели");
 		setResizable(false);
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		setModal(true);

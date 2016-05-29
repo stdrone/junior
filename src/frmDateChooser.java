@@ -36,6 +36,7 @@ public class frmDateChooser extends JDialog implements ChangeListener {
 	private JLabel _lblPeriod;
 
 	public frmDateChooser(Date dateFrom, Date dateTo) {
+		setTitle("Выбор периода");
 		setModal(true);
 		_dateMin = dateFrom;
 		_dateMax = dateTo;

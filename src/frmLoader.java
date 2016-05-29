@@ -62,6 +62,7 @@ public class frmLoader extends JDialog {
 	 * @param appMain 
 	 */
 	public frmLoader(appMain appMain) {
+		setTitle("Новая задача");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(".\\res\\app.png"));
 		_appMain = appMain;
 		_actives = new TreeMap<Integer,String>();

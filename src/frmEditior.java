@@ -32,6 +32,7 @@ public class frmEditior extends JDialog {
 	 * @param _appMain 
 	 */
 	public frmEditior(DataLoader data) {
+		setTitle("Условия задачи");
 		_dataLoader = data;
 		if(_dataLoader.haveSource())
 		{
