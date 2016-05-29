@@ -35,7 +35,7 @@ public class DataModelActives extends AbstractTableModel {
 		{
 			_activeNames[i] = row.getValue();
 			_activeIds[i] = row.getKey();
-			_choosen[i] = chosen.containsKey(_activeIds[i]);
+			_choosen[i] = (chosen == null) ? false : chosen.containsKey(_activeIds[i]);
 			i ++;
 		}
 	}

@@ -14,17 +14,16 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import net.miginfocom.swing.MigLayout;
 import ru.sfedu.mmcs.portfolio.PortfolioException;
-import ru.sfedu.mmcs.portfolio.db.SQLiteData;
 import ru.sfedu.mmcs.portfolio.loaders.DataLoader;
 import ru.sfedu.mmcs.portfolio.loaders.DataLoaderDB;
 import ru.sfedu.mmcs.portfolio.loaders.DataLoaderManual;
+import ru.sfedu.mmcs.portfolio.sources.SourcePrices;
 
 import javax.swing.ButtonGroup;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 
 import java.awt.event.ActionListener;
-import java.util.TreeMap;
 import java.awt.event.ActionEvent;
 import java.awt.Toolkit;
 
@@ -40,7 +39,7 @@ public class frmLoader extends JDialog {
 	private JSpinner spnVariables;
 	private JSpinner spnEqations;
 	private appMain _appMain;
-	private TreeMap<Integer,String> _actives;
+	private SourcePrices _prices;
 
 	private void enablePanel(JPanel pnPanel, boolean enable)
 	{
@@ -65,7 +64,7 @@ public class frmLoader extends JDialog {
 		setTitle("Новая задача");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(".\\res\\app.png"));
 		_appMain = appMain;
-		_actives = new TreeMap<Integer,String>();
+		_prices = new SourcePrices();
 		setResizable(false);
 		setModal(true);
 		setModalityType(ModalityType.APPLICATION_MODAL);
@@ -152,12 +151,12 @@ public class frmLoader extends JDialog {
 			JButton btnNewButton = new JButton("\u041E\u0431\u0437\u043E\u0440...");
 			btnNewButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					frmActiveChooser aChooser = new frmActiveChooser(_actives);
-					aChooser.setVisible(true);
-					_actives = aChooser.getActives();
-					txtCSVFile.setText((_actives.size() == 0)
+					frmDataViewEdit aEdit = new frmDataViewEdit(_prices);
+					aEdit.setVisible(true);
+					_prices = aEdit.getPrices();
+					txtCSVFile.setText((_prices.getCountActives() == 0)
 							? "Не выбрано ни одного актива"
-							: String.format("Выбрано активов %d", _actives.size()).toString());
+							: String.format("Выбрано активов %d", _prices.getCountActives()).toString());
 				}
 			});
 			pnDB.add(btnNewButton, "cell 3 0,alignx left,aligny top");
@@ -178,7 +177,7 @@ public class frmLoader extends JDialog {
 							break; 
 						case "DB":
 							try {
-								data = new DataLoaderDB(getEqations(), SQLiteData.getPrices(_actives, null, null));
+								data = new DataLoaderDB(getEqations(), _prices);
 							} catch(PortfolioException ex) {
 								JOptionPane.showMessageDialog(contentPanel, ex.getMessage(), "Ошибка при загрузке файла", JOptionPane.ERROR_MESSAGE);
 								return;

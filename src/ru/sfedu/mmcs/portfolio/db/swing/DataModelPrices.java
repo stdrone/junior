@@ -23,8 +23,7 @@ public class DataModelPrices extends AbstractTableModel {
 
 	@Override
 	public int getRowCount() {
-		return _prices.getCountActives();
-		
+		return (_prices == null) ? 0 : _prices.getCountActives();
 	}
 
 	@Override
@@ -42,10 +41,15 @@ public class DataModelPrices extends AbstractTableModel {
 	public String getColumnName(int column) {
 		switch (column) {
 		case 0:
-			return "";
+			return "Актив";
 		default:
 			return _dateFormat.format(_prices.getDate(column - 1));
 		}
+	}
+	
+	@Override
+	public boolean isCellEditable(int rowIndex, int columnIndex) {
+		return (columnIndex != 0);
 	}
 	
 	@Override
@@ -53,4 +57,7 @@ public class DataModelPrices extends AbstractTableModel {
 		_prices.set(rowIndex, columnIndex - 1, (Double) aValue);
 	}
 	
+	public SourcePrices getSource() {
+		return _prices;
+	}
 }

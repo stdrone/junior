@@ -36,6 +36,7 @@ public class frmActiveChooser extends JDialog {
 	private JTextField _txtFilter;
 	private TableRowSorter<DataModelActives> _sorter;
 	private TreeMap<Integer,String> _actives;;
+	private boolean _isOk = false;
 
 	/**
 	 * Create the dialog.
@@ -99,7 +100,7 @@ public class frmActiveChooser extends JDialog {
 			_table = new JTable();
 			_table.setModel(model);
 			_table.setRowSorter(_sorter);
-			_table.getColumnModel().getColumn(0).setPreferredWidth(23);
+			_table.getColumnModel().getColumn(0).setMaxWidth(25);
 			JScrollPane scrollPane = new JScrollPane(_table);
 			contentPanel.add(scrollPane);
 		}
@@ -112,6 +113,7 @@ public class frmActiveChooser extends JDialog {
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						_actives = ((DataModelActives)_table.getModel()).getChoosen();
+						_isOk = true;
 						dispose();
 					}
 				});
@@ -135,5 +137,8 @@ public class frmActiveChooser extends JDialog {
 	public TreeMap<Integer,String> getActives() {
 		return _actives; 
 	}
-
+	
+	public boolean isOk() {
+		return _isOk;
+	}
 }

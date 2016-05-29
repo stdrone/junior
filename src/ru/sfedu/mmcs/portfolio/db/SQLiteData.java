@@ -60,7 +60,7 @@ public class SQLiteData {
 	}
 	
 	public static SourcePrices getPrices(TreeMap<Integer,String> actives, Date dateFrom, Date dateTo) {
-		SourcePrices data = new SourcePrices();
+		SourcePrices data = new SourcePrices(actives);
 		try {
 			PreparedStatement qry = SQLiteConnection.db().prepareStatement("SELECT id,name,date,price,price_new FROM active a left join price p on (a.id = p.active) WHERE date between ? and ? order by date, name");
 			if(dateFrom == null) dateFrom = new Date(0);
