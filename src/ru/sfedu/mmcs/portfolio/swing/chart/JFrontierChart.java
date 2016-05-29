@@ -142,5 +142,5 @@ public class JFrontierChart extends ChartPanel {
 			JFrontierChart.this._plot.setDataset(2, dataPoint);
 		}}
 	
-	public final EntityClickListner.EntityClickSource Events = new EntityClickListner.EntityClickSource();
+	public final EntityClickSource Events = new EntityClickSource();
 }
