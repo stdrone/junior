@@ -4,9 +4,12 @@ import java.awt.FileDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.StreamCorruptedException;
 import java.util.Enumeration;
 
 import javax.swing.JFrame;
@@ -160,7 +163,29 @@ public class appMain {
 				fileChooser.setVisible(true);
 				File[] file = fileChooser.getFiles();
 				if (file.length > 0) {
-					//txtXMLFile.setText(file[0].getAbsolutePath());
+					ObjectInputStream fileIn = null;
+					try {
+						fileIn = new ObjectInputStream(new FileInputStream(file[0].getAbsolutePath()));
+						DataLoader data = (DataLoader) fileIn.readObject();
+						_data.loadData(data);
+					} catch (StreamCorruptedException ex) {
+						JOptionPane.showMessageDialog(_frame, "Неверный формат файла", "Ошибка при загрузке файла", JOptionPane.ERROR_MESSAGE);
+						return;
+					} catch (ClassNotFoundException ex) {
+						JOptionPane.showMessageDialog(_frame, ex.getMessage(), "Ошибка при загрузке файла", JOptionPane.ERROR_MESSAGE);
+						return;
+					} catch (IOException ex) {
+						JOptionPane.showMessageDialog(_frame, ex.getMessage(), "Ошибка при загрузке файла", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+					finally
+					{
+						try {
+							if(fileIn != null)
+								fileIn.close();
+						} catch (IOException ex) {
+						}
+					}
 				}
 			}
 		});
