@@ -34,7 +34,7 @@ public class DataLoaderDB extends DataLoader {
 				readDate = data.getDate(i);
 				Double rV = data.get(i, j);
 				if(data.get(i, j) == null)
-					throw new IllegalArgumentException(String.format("Актив \"%s\" не содержит данных за %s", _names[i], formatter.format(readDate)));
+					throw new PortfolioException(String.format("Актив \"%s\" не содержит данных за %s", _names[i], formatter.format(readDate)));
 				readValue[i] = rV;
 				currentRow[i] = (readValue[i] - lastValue[i]) / lastValue[i];
 			}

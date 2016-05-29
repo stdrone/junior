@@ -21,37 +21,31 @@ import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.JLabel;
 import javax.swing.BoxLayout;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeMap;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class frmActiveChooser extends JDialog {
 
 	private static final long serialVersionUID = -4878939282001533318L;
 	private final JPanel contentPanel = new JPanel();
-	private JTable table;
-	private JTextField txtFilter;
+	private JTable _table;
+	private JTextField _txtFilter;
 	private TableRowSorter<DataModelActives> _sorter;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			frmActiveChooser dialog = new frmActiveChooser();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	private TreeMap<Integer,String> _actives;;
 
 	/**
 	 * Create the dialog.
 	 */
-	public frmActiveChooser() {
+	public frmActiveChooser(TreeMap<Integer,String> actives) {
 		setTitle("Выбор активов");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(".\\res\\app.png"));
+		setModal(true);
 		setBounds(100, 100, 370, 317);
+		_actives = actives;
 		getContentPane().setLayout(new BorderLayout());
 		{
 			JPanel filterPane = new JPanel();
@@ -62,13 +56,13 @@ public class frmActiveChooser extends JDialog {
 				filterPane.add(label);
 			}
 			{
-				txtFilter = new JTextField();
-				txtFilter.getDocument().addDocumentListener(new DocumentListener() {
+				_txtFilter = new JTextField();
+				_txtFilter.getDocument().addDocumentListener(new DocumentListener() {
 					
 					private void filter() {
 						RowFilter<DataModelActives, Object> rf = null;
 						try {
-							rf = RowFilter.regexFilter(txtFilter.getText(), 0);
+							rf = RowFilter.regexFilter(_txtFilter.getText(), 1);
 						} catch (java.util.regex.PatternSyntaxException e) {
 							return;
 						}
@@ -89,24 +83,24 @@ public class frmActiveChooser extends JDialog {
 					public void changedUpdate(DocumentEvent e) {
 					}
 				});
-				filterPane.add(txtFilter);
+				filterPane.add(_txtFilter);
 			}
 		}
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(new BorderLayout(0, 0));
 		{
-			DataModelActives model = new DataModelActives(SQLiteData.getActives());
+			DataModelActives model = new DataModelActives(SQLiteData.getActives(),actives);
 			_sorter = new TableRowSorter<DataModelActives>(model);
+			contentPanel.setLayout(new BorderLayout(0, 0));
 			List<RowSorter.SortKey> sortKeys = new ArrayList<RowSorter.SortKey>();
 			sortKeys.add(new RowSorter.SortKey(1, SortOrder.ASCENDING));
 			_sorter.setSortKeys(sortKeys); 
 			
-			JScrollPane scrollPane = new JScrollPane();
-			table = new JTable();
-			table.setModel(model);
-			table.setRowSorter(_sorter);
-			scrollPane.add(table);
+			_table = new JTable();
+			_table.setModel(model);
+			_table.setRowSorter(_sorter);
+			_table.getColumnModel().getColumn(0).setPreferredWidth(23);
+			JScrollPane scrollPane = new JScrollPane(_table);
 			contentPanel.add(scrollPane);
 		}
 		{
@@ -115,16 +109,31 @@ public class frmActiveChooser extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton okButton = new JButton("OK");
+				okButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						_actives = ((DataModelActives)_table.getModel()).getChoosen();
+						dispose();
+					}
+				});
 				okButton.setActionCommand("OK");
 				buttonPane.add(okButton);
 				getRootPane().setDefaultButton(okButton);
 			}
 			{
 				JButton cancelButton = new JButton("Cancel");
+				cancelButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						dispose();
+					}
+				});
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
 			}
 		}
+	}
+	
+	public TreeMap<Integer,String> getActives() {
+		return _actives; 
 	}
 
 }

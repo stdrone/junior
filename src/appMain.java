@@ -153,10 +153,12 @@ public class appMain {
 		mnTask.add(mnOpenData);
 		
 		JMenuItem mnEditData = new JMenuItem("Изменить данные задачи");
+		mnEditData.setEnabled(false);
 		mnTask.add(mnEditData);
 		grpDataExist.add(mnEditData);
 		
 		JMenuItem mnSaveData = new JMenuItem("Сохранить задачу");
+		mnSaveData.setEnabled(false);
 		mnTask.add(mnSaveData);
 		grpDataExist.add(mnSaveData);
 		

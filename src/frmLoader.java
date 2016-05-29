@@ -1,6 +1,5 @@
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.FileDialog;
 import java.awt.FlowLayout;
 
 import javax.swing.JButton;
@@ -13,12 +12,11 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.JTextField;
-
 import net.miginfocom.swing.MigLayout;
 import ru.sfedu.mmcs.portfolio.PortfolioException;
+import ru.sfedu.mmcs.portfolio.db.SQLiteData;
 import ru.sfedu.mmcs.portfolio.loaders.DataLoader;
-import ru.sfedu.mmcs.portfolio.loaders.DataLoaderFinamCSV;
+import ru.sfedu.mmcs.portfolio.loaders.DataLoaderDB;
 import ru.sfedu.mmcs.portfolio.loaders.DataLoaderManual;
 
 import javax.swing.ButtonGroup;
@@ -26,12 +24,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.StreamCorruptedException;
-import java.util.Arrays;
+import java.util.TreeMap;
 import java.awt.event.ActionEvent;
 import java.awt.Toolkit;
 
@@ -41,15 +34,13 @@ public class frmLoader extends JDialog {
 	private static final long serialVersionUID = 8457405360475510348L;
 	private final JPanel contentPanel = new JPanel();
 	private JLabel txtCSVFile;
-	private JTextField txtXMLFile;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private JPanel pnManual;
-	private JPanel pnFile;
 	private JPanel pnCSV;
 	private JSpinner spnVariables;
 	private JSpinner spnEqations;
 	private appMain _appMain;
-	private File[] _files;
+	private TreeMap<Integer,String> _actives;
 
 	private void enablePanel(JPanel pnPanel, boolean enable)
 	{
@@ -63,7 +54,6 @@ public class frmLoader extends JDialog {
 	private void on_change()
 	{
 		enablePanel(pnManual, buttonGroup.getSelection().getActionCommand() == "Manual");
-		enablePanel(pnFile, buttonGroup.getSelection().getActionCommand() == "Precalc");
 		enablePanel(pnCSV, buttonGroup.getSelection().getActionCommand() == "CSV");
 	}
 
@@ -74,23 +64,24 @@ public class frmLoader extends JDialog {
 	public frmLoader(appMain appMain) {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(".\\res\\app.png"));
 		_appMain = appMain;
+		_actives = new TreeMap<Integer,String>();
 		setResizable(false);
 		setModal(true);
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 450, 308);
+		setBounds(100, 100, 514, 257);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		{
-			JRadioButton rbnManual = new JRadioButton("\u0412\u0432\u0435\u0441\u0442\u0438 \u0434\u0430\u043D\u043D\u044B\u0435 \u0432\u0440\u0443\u0447\u043D\u0443\u044E");
+			JRadioButton rbnManual = new JRadioButton("Ввести ковариационную матрицу, матрицу доходностей и ограничения вручную");
 			rbnManual.setSelected(true);
 			rbnManual.addChangeListener(new ChangeListener() {
 				public void stateChanged(ChangeEvent arg0) {
 					on_change();
 				}
 			});
-			contentPanel.setLayout(new MigLayout("", "[434px,grow]", "[grow][33px][33px][33px][33px][33px][66px]"));
+			contentPanel.setLayout(new MigLayout("", "[484px]", "[26px][33px][34px][37px]"));
 			{
 				JPanel panel = new JPanel();
 				contentPanel.add(panel, "cell 0 0,grow");
@@ -128,47 +119,7 @@ public class frmLoader extends JDialog {
 			}
 		}
 		{
-			JRadioButton rbnPrecalc = new JRadioButton("\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u043F\u0440\u0435\u0434\u0432\u0430\u0440\u0438\u0442\u0435\u043B\u044C\u043D\u043E \u0440\u0430\u0441\u0441\u0447\u0438\u0442\u0430\u043D\u043D\u044B\u0435 \u0434\u0430\u043D\u043D\u044B\u0435");
-			rbnPrecalc.addChangeListener(new ChangeListener() {
-				public void stateChanged(ChangeEvent arg0) {
-					on_change();
-				}
-			});
-			rbnPrecalc.setActionCommand("Precalc");
-			buttonGroup.add(rbnPrecalc);
-			contentPanel.add(rbnPrecalc, "cell 0 3,grow");
-		}
-		{
-			pnFile = new JPanel();
-			contentPanel.add(pnFile, "cell 0 4,grow");
-			pnFile.setLayout(new MigLayout("", "[26px][286px][75px]", "[23px]"));
-			{
-				JLabel lblNewLabel_2 = new JLabel("\u0424\u0430\u0439\u043B");
-				pnFile.add(lblNewLabel_2, "cell 0 0,alignx left,aligny center");
-			}
-			{
-				txtXMLFile = new JTextField();
-				pnFile.add(txtXMLFile, "cell 1 0,alignx left,aligny center");
-				txtXMLFile.setColumns(35);
-			}
-			{
-				JButton btnNewButton = new JButton("\u041E\u0431\u0437\u043E\u0440...");
-				btnNewButton.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						FileDialog fileChooser = new FileDialog(frmLoader.this,"Загрузка данных",FileDialog.LOAD);
-						fileChooser.setFile("*.junc");
-						fileChooser.setVisible(true);
-						File[] file = fileChooser.getFiles();
-						if (file.length > 0) {
-								txtXMLFile.setText(file[0].getAbsolutePath());
-						}
-					}
-				});
-				pnFile.add(btnNewButton, "cell 2 0,alignx left,aligny top");
-			}
-		}
-		{
-			JRadioButton rbnCSV = new JRadioButton("\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u0438\u0441\u0445\u043E\u0434\u043D\u044B\u0435 \u0434\u0430\u043D\u043D\u044B\u0435 \u0432 \u0444\u043E\u0440\u043C\u0430\u0442\u0435 CSV");
+			JRadioButton rbnCSV = new JRadioButton("<html>Рассчитать матрицы ковариации и доходностей на основании выбранных активов, ораничения задать вручную</html>");
 			rbnCSV.addChangeListener(new ChangeListener() {
 				public void stateChanged(ChangeEvent e) {
 					on_change();
@@ -176,41 +127,39 @@ public class frmLoader extends JDialog {
 			});
 			rbnCSV.setActionCommand("CSV");
 			buttonGroup.add(rbnCSV);
-			contentPanel.add(rbnCSV, "cell 0 5,grow");
+			contentPanel.add(rbnCSV, "cell 0 3,grow");
 		}
 		{
 			pnCSV = new JPanel();
-			contentPanel.add(pnCSV, "cell 0 6,grow");
-			pnCSV.setLayout(new MigLayout("", "[grow][75px]", "[23px][23px]"));
+			contentPanel.add(pnCSV, "cell 0 4,grow");
+			pnCSV.setLayout(new MigLayout("", "[grow][75px][grow][75px]", "[23px]"));
 			{
 				JLabel lblNewLabel_1 = new JLabel("\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u0439");
 				pnCSV.add(lblNewLabel_1, "cell 0 0,grow");
 			}
 			{
-				JSpinner spnEqations = new JSpinner();
-				spnEqations.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
-				pnCSV.add(spnEqations, "cell 1 0,grow");
+				JSpinner spnEqations_1 = new JSpinner();
+				spnEqations_1.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
+				pnCSV.add(spnEqations_1, "cell 1 0,grow");
 			}
 			{
-				txtCSVFile = new JLabel("");
-				pnCSV.add(txtCSVFile, "cell 0 1,alignx left,aligny center,grow");
+				{
+					txtCSVFile = new JLabel("Нет выбранных активов");
+					pnCSV.add(txtCSVFile, "cell 2 0,alignx center,growy,aligny center");
+				}
 			}
-			{
-				JButton btnNewButton = new JButton("\u041E\u0431\u0437\u043E\u0440...");
-				btnNewButton.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						FileDialog fileChooser = new FileDialog(frmLoader.this,"Загрузка данных",FileDialog.LOAD);
-						fileChooser.setMultipleMode(true);
-						fileChooser.setFile("*.csv");
-						fileChooser.setVisible(true);
-						_files = fileChooser.getFiles();
-						txtCSVFile.setText((_files.length == 0)
-								? "Не выбрано ни одного актива"
-								: String.format("Выбрано активов %d", _files.length).toString());
-					}
-				});
-				pnCSV.add(btnNewButton, "cell 1 1,alignx left,aligny top");
-			}
+			JButton btnNewButton = new JButton("\u041E\u0431\u0437\u043E\u0440...");
+			btnNewButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					frmActiveChooser aChooser = new frmActiveChooser(_actives);
+					aChooser.setVisible(true);
+					_actives = aChooser.getActives();
+					txtCSVFile.setText((_actives.size() == 0)
+							? "Не выбрано ни одного актива"
+							: String.format("Выбрано активов %d", _actives.size()).toString());
+				}
+			});
+			pnCSV.add(btnNewButton, "cell 3 0,alignx left,aligny top");
 		}
 		{
 			JPanel buttonPane = new JPanel();
@@ -226,33 +175,9 @@ public class frmLoader extends JDialog {
 						case "Manual":
 							data = new DataLoaderManual(getVariables(), getEqations());
 							break; 
-						case "Precalc":
-							ObjectInputStream fileIn = null;
-							try {
-								fileIn = new ObjectInputStream(new FileInputStream(txtXMLFile.getText()));
-								data = (DataLoader) fileIn.readObject();
-							} catch (StreamCorruptedException ex) {
-								JOptionPane.showMessageDialog(contentPanel, "Неверный формат файла", "Ошибка при загрузке файла", JOptionPane.ERROR_MESSAGE);
-								return;
-							} catch (ClassNotFoundException ex) {
-								JOptionPane.showMessageDialog(contentPanel, ex.getMessage(), "Ошибка при загрузке файла", JOptionPane.ERROR_MESSAGE);
-								return;
-							} catch (IOException ex) {
-								JOptionPane.showMessageDialog(contentPanel, ex.getMessage(), "Ошибка при загрузке файла", JOptionPane.ERROR_MESSAGE);
-								return;
-							}
-							finally
-							{
-								try {
-									if(fileIn != null)
-										fileIn.close();
-								} catch (IOException e) {
-								}
-							}
-							break;
 						case "CSV":
 							try {
-								data = new DataLoaderFinamCSV(getEqations(), Arrays.asList(_files));
+								data = new DataLoaderDB(getEqations(), SQLiteData.getPrices(_actives, null, null));
 							} catch(PortfolioException ex) {
 								JOptionPane.showMessageDialog(contentPanel, ex.getMessage(), "Ошибка при загрузке файла", JOptionPane.ERROR_MESSAGE);
 								return;

@@ -62,9 +62,12 @@ public class SQLiteData {
 	public static SourcePrices getPrices(TreeMap<Integer,String> actives, Date dateFrom, Date dateTo) {
 		SourcePrices data = new SourcePrices();
 		try {
-			PreparedStatement qry = SQLiteConnection.db().prepareStatement("SELECT id,name,date,price,price_new FROM active a, price p WHERE a.id = p.active and date between ? and ?");
+			PreparedStatement qry = SQLiteConnection.db().prepareStatement("SELECT id,name,date,price,price_new FROM active a left join price p on (a.id = p.active) WHERE date between ? and ? order by date, name");
+			if(dateFrom == null) dateFrom = new Date(0);
 			qry.setDate(1, new java.sql.Date(dateFrom.getTime()));
+			if(dateTo == null) dateTo = new Date(Long.MAX_VALUE);
 			qry.setDate(2, new java.sql.Date(dateTo.getTime()));
+			
 			ResultSet rs = qry.executeQuery();
 			while(rs.next())
 			{
