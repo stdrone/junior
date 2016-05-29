@@ -152,6 +152,20 @@ public class appMain {
 		JMenuItem mnOpenData = new JMenuItem("Новая задача");
 		mnTask.add(mnOpenData);
 		
+		JMenuItem menuItem = new JMenuItem("Открыть задачу");
+		menuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FileDialog fileChooser = new FileDialog(_frame,"Загрузка данных",FileDialog.LOAD);
+				fileChooser.setFile("*.junc");
+				fileChooser.setVisible(true);
+				File[] file = fileChooser.getFiles();
+				if (file.length > 0) {
+					//txtXMLFile.setText(file[0].getAbsolutePath());
+				}
+			}
+		});
+		mnTask.add(menuItem);
+		
 		JMenuItem mnEditData = new JMenuItem("Изменить данные задачи");
 		mnEditData.setEnabled(false);
 		mnTask.add(mnEditData);
