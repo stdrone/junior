@@ -158,7 +158,7 @@ public class appMain {
 		JMenuItem nmOpen = new JMenuItem("Открыть задачу");
 		nmOpen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FileDialog fileChooser = new FileDialog(_frame,"Загрузка данных",FileDialog.LOAD);
+				FileDialog fileChooser = new FileDialog(_frame,"Открытие задачи",FileDialog.LOAD);
 				fileChooser.setFile("*.junc");
 				fileChooser.setVisible(true);
 				File[] file = fileChooser.getFiles();

@@ -36,7 +36,7 @@ public class frmLoader extends JDialog {
 	private JLabel txtCSVFile;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private JPanel pnManual;
-	private JPanel pnCSV;
+	private JPanel pnDB;
 	private JSpinner spnVariables;
 	private JSpinner spnEqations;
 	private appMain _appMain;
@@ -54,7 +54,7 @@ public class frmLoader extends JDialog {
 	private void on_change()
 	{
 		enablePanel(pnManual, buttonGroup.getSelection().getActionCommand() == "Manual");
-		enablePanel(pnCSV, buttonGroup.getSelection().getActionCommand() == "CSV");
+		enablePanel(pnDB, buttonGroup.getSelection().getActionCommand() == "DB");
 	}
 
 	/**
@@ -119,33 +119,33 @@ public class frmLoader extends JDialog {
 			}
 		}
 		{
-			JRadioButton rbnCSV = new JRadioButton("<html>Рассчитать матрицы ковариации и доходностей на основании выбранных активов, ораничения задать вручную</html>");
-			rbnCSV.addChangeListener(new ChangeListener() {
+			JRadioButton rbnDB = new JRadioButton("<html>Рассчитать матрицы ковариации и доходностей на основании выбранных активов, ораничения задать вручную</html>");
+			rbnDB.addChangeListener(new ChangeListener() {
 				public void stateChanged(ChangeEvent e) {
 					on_change();
 				}
 			});
-			rbnCSV.setActionCommand("CSV");
-			buttonGroup.add(rbnCSV);
-			contentPanel.add(rbnCSV, "cell 0 3,grow");
+			rbnDB.setActionCommand("DB");
+			buttonGroup.add(rbnDB);
+			contentPanel.add(rbnDB, "cell 0 3,grow");
 		}
 		{
-			pnCSV = new JPanel();
-			contentPanel.add(pnCSV, "cell 0 4,grow");
-			pnCSV.setLayout(new MigLayout("", "[grow][75px][grow][75px]", "[23px]"));
+			pnDB = new JPanel();
+			contentPanel.add(pnDB, "cell 0 4,grow");
+			pnDB.setLayout(new MigLayout("", "[grow][55px][grow][55px]", "[23px]"));
 			{
 				JLabel lblNewLabel_1 = new JLabel("\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u0439");
-				pnCSV.add(lblNewLabel_1, "cell 0 0,grow");
+				pnDB.add(lblNewLabel_1, "cell 0 0,grow");
 			}
 			{
 				JSpinner spnEqations_1 = new JSpinner();
 				spnEqations_1.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
-				pnCSV.add(spnEqations_1, "cell 1 0,grow");
+				pnDB.add(spnEqations_1, "cell 1 0,grow");
 			}
 			{
 				{
 					txtCSVFile = new JLabel("Нет выбранных активов");
-					pnCSV.add(txtCSVFile, "cell 2 0,alignx center,growy,aligny center");
+					pnDB.add(txtCSVFile, "cell 2 0,alignx center,growy,aligny center");
 				}
 			}
 			JButton btnNewButton = new JButton("\u041E\u0431\u0437\u043E\u0440...");
@@ -159,7 +159,7 @@ public class frmLoader extends JDialog {
 							: String.format("Выбрано активов %d", _actives.size()).toString());
 				}
 			});
-			pnCSV.add(btnNewButton, "cell 3 0,alignx left,aligny top");
+			pnDB.add(btnNewButton, "cell 3 0,alignx left,aligny top");
 		}
 		{
 			JPanel buttonPane = new JPanel();
@@ -175,7 +175,7 @@ public class frmLoader extends JDialog {
 						case "Manual":
 							data = new DataLoaderManual(getVariables(), getEqations());
 							break; 
-						case "CSV":
+						case "DB":
 							try {
 								data = new DataLoaderDB(getEqations(), SQLiteData.getPrices(_actives, null, null));
 							} catch(PortfolioException ex) {
