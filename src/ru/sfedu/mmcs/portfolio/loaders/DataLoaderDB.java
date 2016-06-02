@@ -23,7 +23,7 @@ public class DataLoaderDB extends DataLoader {
 		Date readDate = null; 
 
 		boolean add = false;
-		int countDates = data.getCountDates();
+		long countDates = data.getCountDates();
 		for(int j = 0; j < countDates; j++)
 		{
 			for(int i = _n - 1; i >= 0; i--) {
@@ -45,7 +45,7 @@ public class DataLoaderDB extends DataLoader {
 		if(raw.size() == 0)
 			throw new PortfolioException("Выбранные активы не содержат пересекающиеся временные даты.");
 		_dataBegin = data.getDate(0);
-		_dataEnd = data.getDate(data.getCountDates() - 1);
+		_dataEnd = data.getDate((int)data.getCountDates() - 1);
 		_r = raw.values().toArray(new double[0][0]);
 	}
 }

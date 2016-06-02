@@ -66,7 +66,7 @@ public class frmDataViewEdit extends JDialog implements ChangeListener {
 			datePanel = new JDatePanelImpl(model, p);
 			_pDateTo = new JDatePickerImpl(datePanel, new DateLabelFormatter());
 			_pDateTo.setTextEditable(true);
-			model.setValue(_prices.getDate(_prices.getCountDates() - 1));
+			model.setValue(_prices.getDate((int)_prices.getCountDates() - 1));
 
 			JPanel filterPane = new JPanel();
 			getContentPane().add(filterPane, BorderLayout.NORTH);

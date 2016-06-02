@@ -18,7 +18,7 @@ public class DataModelPrices extends AbstractTableModel {
 	
 	@Override
 	public int getColumnCount() {
-		return _prices.getCountDates() + 1;
+		return (int)_prices.getCountDates() + 1;
 	}
 
 	@Override

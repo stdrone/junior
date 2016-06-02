@@ -152,13 +152,13 @@ public class appMain {
 		JMenu mnTask = new JMenu("Задача");
 		menuBar.add(mnTask);
 		
-		JMenuItem mnOpenData = new JMenuItem("Новая задача");
+		JMenuItem mnOpenData = new JMenuItem("Новые исходные данные");
 		mnTask.add(mnOpenData);
 		
-		JMenuItem nmOpen = new JMenuItem("Открыть задачу");
+		JMenuItem nmOpen = new JMenuItem("Загрузить исходные данные");
 		nmOpen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FileDialog fileChooser = new FileDialog(_frame,"Открытие задачи",FileDialog.LOAD);
+				FileDialog fileChooser = new FileDialog(_frame,"Загрузка исходных данных",FileDialog.LOAD);
 				fileChooser.setFile("*.junc");
 				fileChooser.setVisible(true);
 				File[] file = fileChooser.getFiles();
@@ -191,12 +191,12 @@ public class appMain {
 		});
 		mnTask.add(nmOpen);
 		
-		JMenuItem mnEditData = new JMenuItem("Изменить данные задачи");
+		JMenuItem mnEditData = new JMenuItem("Изменить исходные данные");
 		mnEditData.setEnabled(false);
 		mnTask.add(mnEditData);
 		grpDataExist.add(mnEditData);
 		
-		JMenuItem mnSaveData = new JMenuItem("Сохранить задачу");
+		JMenuItem mnSaveData = new JMenuItem("Сохранить исходные данные");
 		mnSaveData.setEnabled(false);
 		mnTask.add(mnSaveData);
 		grpDataExist.add(mnSaveData);

@@ -119,6 +119,7 @@ public class JFrontierChart extends ChartPanel {
 
 		@Override
 		public void chartMouseMoved(ChartMouseEvent e) {
+			// https://stackoverflow.com/questions/1512112/jfreechart-get-mouse-coordinates
 			DefaultXYDataset dataPoint = new DefaultXYDataset();
 			_data = null;
 			if(e.getEntity() instanceof XYItemEntity)

@@ -61,7 +61,7 @@ public class frmLoader extends JDialog {
 	 * @param appMain 
 	 */
 	public frmLoader(appMain appMain) {
-		setTitle("Новая задача");
+		setTitle("Новые исходные данные");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(".\\res\\app.png"));
 		_appMain = appMain;
 		_prices = new SourcePrices();
@@ -98,9 +98,9 @@ public class frmLoader extends JDialog {
 		{
 			pnManual = new JPanel();
 			contentPanel.add(pnManual, "cell 0 2,grow");
-			pnManual.setLayout(new MigLayout("", "[105px][101px][117px][106px]", "[32px]"));
+			pnManual.setLayout(new MigLayout("", "[grow][55px][grow][55px]", "[32px]"));
 			{
-				JLabel lblNewLabel = new JLabel("\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u043F\u0435\u0440\u0435\u043C\u0435\u043D\u043D\u044B\u0445");
+				JLabel lblNewLabel = new JLabel("Количество ценных бумаг");
 				pnManual.add(lblNewLabel, "cell 0 0,grow");
 			}
 			{
@@ -135,20 +135,20 @@ public class frmLoader extends JDialog {
 			pnDB.setLayout(new MigLayout("", "[grow][55px][grow][55px]", "[23px]"));
 			{
 				JLabel lblNewLabel_1 = new JLabel("\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u0439");
-				pnDB.add(lblNewLabel_1, "cell 0 0,grow");
+				pnDB.add(lblNewLabel_1, "cell 2 0,grow");
 			}
 			{
 				JSpinner spnEqations_1 = new JSpinner();
 				spnEqations_1.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
-				pnDB.add(spnEqations_1, "cell 1 0,grow");
+				pnDB.add(spnEqations_1, "cell 3 0,grow");
 			}
 			{
 				{
 					txtCSVFile = new JLabel("Нет выбранных активов");
-					pnDB.add(txtCSVFile, "cell 2 0,alignx center,growy,aligny center");
+					pnDB.add(txtCSVFile, "cell 0 0,alignx center,growy,aligny center");
 				}
 			}
-			JButton btnNewButton = new JButton("\u041E\u0431\u0437\u043E\u0440...");
+			JButton btnNewButton = new JButton("Обзор");
 			btnNewButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					frmDataViewEdit aEdit = new frmDataViewEdit(_prices);
@@ -159,7 +159,7 @@ public class frmLoader extends JDialog {
 							: String.format("Выбрано активов %d", _prices.getCountActives()).toString());
 				}
 			});
-			pnDB.add(btnNewButton, "cell 3 0,alignx left,aligny top");
+			pnDB.add(btnNewButton, "cell 1 0,alignx left,aligny top");
 		}
 		{
 			JPanel buttonPane = new JPanel();
