@@ -34,6 +34,7 @@ public class frmDateChooser extends JDialog implements ChangeListener {
 	private JDatePickerImpl _pDateFrom,_pDateTo;
 	private JButton _okButton;
 	private JLabel _lblPeriod;
+	private boolean _isOk = false;
 
 	public frmDateChooser(Date dateFrom, Date dateTo) {
 		setTitle("Выбор периода");
@@ -47,9 +48,12 @@ public class frmDateChooser extends JDialog implements ChangeListener {
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(new GridLayout(3, 0, 0, 0));
+		if(dateFrom != null && dateTo != null)
 		{
-			DateFormat format = DateFormat.getDateInstance();
-			JLabel lblAvailDate = new JLabel(String.format("Допустимые даты от %s до %s", format.format(dateFrom), format.format(dateTo)).toString());
+			DateFormat format = new SimpleDateFormat(" dd.MM.yyyy");
+			JLabel lblAvailDate = new JLabel(String.format("Допустимы даты%s%s%s%s",
+					(dateFrom == null) ? "" : " от", format.format(dateFrom),
+					(dateTo == null) ? "" : " до", format.format(dateTo)).toString());
 			contentPanel.add(lblAvailDate);
 		}
 		_lblPeriod = new JLabel("Выбран период");
@@ -88,6 +92,7 @@ public class frmDateChooser extends JDialog implements ChangeListener {
 			{
 				_okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						_isOk = true;
 						dispose();
 					}
 				});
@@ -178,5 +183,9 @@ public class frmDateChooser extends JDialog implements ChangeListener {
 	}
 	public void setEnd(Date date) {
 		((UtilDateModel)_pDateTo.getModel()).setValue(date);
+	}
+	
+	public boolean isOk() {
+		return _isOk;
 	}
 }

@@ -26,14 +26,19 @@ import org.jdatepicker.impl.UtilDateModel;
 import ru.sfedu.mmcs.portfolio.db.SQLiteData;
 import ru.sfedu.mmcs.portfolio.db.swing.DataModelPrices;
 import ru.sfedu.mmcs.portfolio.sources.SourcePrices;
+import javax.swing.SwingConstants;
+import net.miginfocom.swing.MigLayout;
 
-public class frmDataViewEdit extends JDialog implements ChangeListener {
+public class frmDataViewEdit extends JDialog {
 
 	private static final long serialVersionUID = 1330921098227284835L;
 	private final JPanel contentPanel = new JPanel();
 	private JTable _table;
-	private JDatePickerImpl _pDateFrom,_pDateTo;
 	private SourcePrices _prices;
+	private SimpleDateFormat _dateFormatter = new SimpleDateFormat("dd.MM.yyyy");
+	private Date _dateFrom = new Date();
+	private Date _dateTo = new Date();
+	private JLabel _lblDates;
 
 	/**
 	 * Create the dialog.
@@ -49,45 +54,47 @@ public class frmDataViewEdit extends JDialog implements ChangeListener {
 		setBounds(100, 100, 870, 375);
 		getContentPane().setLayout(new BorderLayout());
 		{
-			Properties p = new Properties();
-			p.put("text.today", "Сегодня");
-			p.put("text.month", "Месяц");
-			p.put("text.year", "Год");
-			
-			UtilDateModel model = new UtilDateModel();
-			model.addChangeListener(this);
-			model.setValue(_prices.getDate(0));
-			JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
-			_pDateFrom = new JDatePickerImpl(datePanel, new DateLabelFormatter());
-			_pDateFrom.setTextEditable(true);
-			
-			model = new UtilDateModel();
-			model.addChangeListener(this);
-			datePanel = new JDatePanelImpl(model, p);
-			_pDateTo = new JDatePickerImpl(datePanel, new DateLabelFormatter());
-			_pDateTo.setTextEditable(true);
-			model.setValue(_prices.getDate((int)_prices.getCountDates() - 1));
-
 			JPanel filterPane = new JPanel();
 			getContentPane().add(filterPane, BorderLayout.NORTH);
-			filterPane.add(new JLabel("Дата от"));
-			filterPane.add(_pDateFrom);
-			filterPane.add(new JLabel("дата по"));
-			filterPane.add(_pDateTo);
+			filterPane.setLayout(new MigLayout("", "[grow][100px][100px]", "[23px]"));
 			JButton activesButton = new JButton("Выбор активов");
+			activesButton.setHorizontalAlignment(SwingConstants.RIGHT);
+			activesButton.setVerticalAlignment(SwingConstants.BOTTOM);
 			activesButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					frmActiveChooser aChooser = new frmActiveChooser(((DataModelPrices)_table.getModel()).getSource().getActivesData());
 					aChooser.setVisible(true);
-					if(aChooser.isOk())
-					{
-						SourcePrices prices = SQLiteData.getPrices(aChooser.getActives(), (Date)_pDateFrom.getModel().getValue(), (Date)_pDateTo.getModel().getValue());
+					if(aChooser.isOk()) {
+						SourcePrices prices = SQLiteData.getPrices(aChooser.getActives(),
+								_dateFrom, (Date)_dateTo);
 						setModel(new DataModelPrices(prices));
 					}
 				}
 			});
-			filterPane.add(activesButton);
-			filterPane.setLayout(new BoxLayout(filterPane, BoxLayout.X_AXIS));
+			_lblDates = new JLabel(String.format("Выбран период с %s по %s", _dateFormatter.format(_dateFrom),_dateFormatter.format(_dateTo)));
+			_lblDates.setHorizontalAlignment(SwingConstants.RIGHT);
+			filterPane.add(_lblDates, "cell 0 0,alignx left,aligny center");
+			{
+				JButton periodButton = new JButton("Выбор периода");
+				periodButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						frmDateChooser fDate = new frmDateChooser(null, null);
+						fDate.setBegin(_dateFrom);
+						fDate.setEnd(_dateTo);
+						fDate.setVisible(true);
+						if(fDate.isOk()) {
+							_dateFrom = fDate.getBegin();
+							_dateTo = fDate.getEnd();
+							SourcePrices prices = SQLiteData.getPrices(((DataModelPrices)_table.getModel()).getSource().getActivesData(),
+									_dateFrom, (Date)_dateTo);
+							setModel(new DataModelPrices(prices));
+							_lblDates.setText(String.format("Выбран период с %s по %s", _dateFormatter.format(_dateFrom),_dateFormatter.format(_dateTo)));
+						}
+					}
+				});
+				filterPane.add(periodButton, "cell 1 0");
+			}
+			filterPane.add(activesButton, "cell 2 0,alignx left,aligny center");
 		}
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -142,35 +149,22 @@ public class frmDataViewEdit extends JDialog implements ChangeListener {
 		return _prices; 
 	}
 
-	private Date _dateFrom = new Date();
-	private Date _dateTo = new Date();
-	@Override
-	public void stateChanged(ChangeEvent arg0) {
-		if(_table != null &&
-				(!_dateFrom.equals(_pDateFrom.getModel().getValue()) || !_dateTo.equals(_pDateTo.getModel().getValue()))) {
-			SourcePrices prices = SQLiteData.getPrices(((DataModelPrices)_table.getModel()).getSource().getActivesData(), (Date)_pDateFrom.getModel().getValue(), (Date)_pDateTo.getModel().getValue());
-			setModel(new DataModelPrices(prices));
-			_dateFrom = (Date) _pDateFrom.getModel().getValue();
-			_dateTo = (Date) _pDateTo.getModel().getValue();
-		}
-	}
-
 	@SuppressWarnings("serial")
 	private class DateLabelFormatter extends AbstractFormatter {
 
 		private String datePattern = "dd.MM.yyyy";
-		private SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);
+		
 		
 		@Override
 		public Object stringToValue(String text) throws ParseException {
-			return dateFormatter.parseObject(text);
+			return _dateFormatter.parseObject(text);
 		}
 
 		@Override
 		public String valueToString(Object value) throws ParseException {
 			if (value != null) {
 				Calendar cal = (Calendar) value;
-				return dateFormatter.format(cal.getTime());
+				return _dateFormatter.format(cal.getTime());
 			}
 			
 			return "";
