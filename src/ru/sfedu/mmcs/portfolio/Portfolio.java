@@ -2,6 +2,7 @@ package ru.sfedu.mmcs.portfolio;
 
 import java.util.SortedMap;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 public class Portfolio {
@@ -34,5 +35,9 @@ public class Portfolio {
 	public Double getValue()
 	{
 		return _var.getX();
+	}
+	
+	public String getName() {
+		return StringUtils.join(_names,", ");
 	}
 }

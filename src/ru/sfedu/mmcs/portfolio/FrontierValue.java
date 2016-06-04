@@ -88,21 +88,17 @@ public class FrontierValue extends Frontier {
 	{
 		addSeries(String.join(", ", (String[])_varList.values().toArray(new String[0])));
 		
-		double high = - a[1] / (2 * a[2]); 
-		if(high > minM && high <= maxM)
-			addOptimalPoint("Вершина", calcPortfolio(new Vector2D(high, a[0] + high*a[1] + high*high*a[2])));
-		high = - 2 * a[0] / a[1];
+		double high = - 2 * a[0] / a[1];
 		if(high > minM && high <= maxM)
 			addOptimalPoint("Отношение Шарпа", calcPortfolio(new Vector2D(high, a[0] + high*a[1] + high*high*a[2])));
-		high = Math.sqrt(a[0]/a[2]);
-		if(high > minM && high <= maxM)
-			addOptimalPoint("Мод.отн.Шарпа", calcPortfolio(new Vector2D(high, a[0] + high*a[1] + high*high*a[2])));
+		
 		
 		double step = (maxM - minM) / 100;
 		for(double m = minM; m <= maxM; m += step)
 		{
 			addData(new Vector2D(m, a[0] + m*a[1] + m*m*a[2]));
 		}
+		addData(new Vector2D(maxM, a[0] + maxM*a[1] + maxM*maxM*a[2]));
 	}
 	
 	private void calcResults() {

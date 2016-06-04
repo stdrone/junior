@@ -97,7 +97,7 @@ public abstract class Frontier {
 	{
 		FrontierData data = new FrontierData(name);
 		data.put(portfolio.getValue(), portfolio);
-		_optimalPoints.put(name, data);
+		_optimalPoints.put(String.format("%s (%s)", name, portfolio.getName()) , data);
 	}
 	
 	public LinkedList<FrontierData> getFrontier() {

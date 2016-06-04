@@ -10,6 +10,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
+import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import ru.sfedu.mmcs.portfolio.db.SQLiteData;
@@ -27,6 +28,8 @@ import java.util.List;
 import java.util.TreeMap;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class frmActiveChooser extends JDialog {
 
@@ -58,6 +61,25 @@ public class frmActiveChooser extends JDialog {
 			}
 			{
 				_txtFilter = new JTextField();
+				_txtFilter.addKeyListener(new KeyAdapter() {
+					@Override
+					public void keyPressed(KeyEvent arg0) {
+						if((arg0.getModifiersEx() == KeyEvent.CTRL_DOWN_MASK) && arg0.getKeyCode() == KeyEvent.VK_SPACE) {
+							if(_table.getRowCount() > 0)
+							{
+								int row = _table.convertRowIndexToModel(0);
+								if(row >= 0) {
+									TableModel model = _table.getModel();
+									model.setValueAt(!(boolean)model.getValueAt(row, 0), row, 0);
+									_table.repaint();
+								}
+							}
+						}
+						else if((arg0.getModifiersEx() == KeyEvent.SHIFT_DOWN_MASK) && arg0.getKeyCode() == KeyEvent.VK_ENTER) {
+							oK();
+						}
+					}
+				});
 				_txtFilter.getDocument().addDocumentListener(new DocumentListener() {
 					
 					private void filter() {
@@ -114,9 +136,7 @@ public class frmActiveChooser extends JDialog {
 				JButton okButton = new JButton("OK");
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						_actives = ((DataModelActives)_table.getModel()).getChoosen();
-						_isOk = true;
-						dispose();
+						oK();
 					}
 				});
 				okButton.setActionCommand("OK");
@@ -134,6 +154,12 @@ public class frmActiveChooser extends JDialog {
 				buttonPane.add(cancelButton);
 			}
 		}
+	}
+	
+	private void oK() {
+		_actives = ((DataModelActives)_table.getModel()).getChoosen();
+		_isOk = true;
+		dispose();
 	}
 	
 	public TreeMap<Integer,String> getActives() {

@@ -69,7 +69,7 @@ public class appMain {
 		if(_chartPanel == null)
 		{
 			Container panel = _frame.getContentPane();
-			_chartPanel = JFrontierChart.createFrontierChartPanel("Зависимость риска от доходности", _data);
+			_chartPanel = JFrontierChart.createFrontierChartPanel("Зависимость риска и активов от доходности", _data);
 			_chartPanel.Events.addEventListner(new EntityClickListner() {
 				public void entityClicked(EventEntityClick e) {
 					analyzePortfolio(e.getPortfolio());
@@ -83,20 +83,53 @@ public class appMain {
 		_frame.revalidate();
 		_frame.repaint();
 		_chartPanel.setVisible(isLoaded());
+		Enumeration<AbstractButton> elms = grpDataExist.getElements();
+		while(elms.hasMoreElements())
+			elms.nextElement().setEnabled(isLoaded());
 	}
 	
 	private boolean isLoaded() {
 		return _data.getLoader() != null;
 	}
 	
-	private void loadData()
+	private void newData()
 	{
 		frmLoader loader = new frmLoader(this);
 		loader.setVisible(true);
 		updateChart();
-		Enumeration<AbstractButton> elms = grpDataExist.getElements();
-		while(elms.hasMoreElements())
-			elms.nextElement().setEnabled(isLoaded());
+	}
+	
+	private void loadData() {
+		FileDialog fileChooser = new FileDialog(_frame,"Загрузка исходных данных",FileDialog.LOAD);
+		fileChooser.setFile("*.junc");
+		fileChooser.setVisible(true);
+		File[] file = fileChooser.getFiles();
+		if (file.length > 0) {
+			ObjectInputStream fileIn = null;
+			try {
+				fileIn = new ObjectInputStream(new FileInputStream(file[0].getAbsolutePath()));
+				DataLoader data = (DataLoader) fileIn.readObject();
+				_data.loadData(data);
+				updateChart();
+			} catch (StreamCorruptedException ex) {
+				JOptionPane.showMessageDialog(_frame, "Неверный формат файла", "Ошибка при загрузке файла", JOptionPane.ERROR_MESSAGE);
+				return;
+			} catch (ClassNotFoundException ex) {
+				JOptionPane.showMessageDialog(_frame, ex.getMessage(), "Ошибка при загрузке файла", JOptionPane.ERROR_MESSAGE);
+				return;
+			} catch (IOException ex) {
+				JOptionPane.showMessageDialog(_frame, ex.getMessage(), "Ошибка при загрузке файла", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			finally
+			{
+				try {
+					if(fileIn != null)
+						fileIn.close();
+				} catch (IOException ex) {
+				}
+			}
+		}
 	}
 	
 	private void editData()
@@ -163,35 +196,7 @@ public class appMain {
 		JMenuItem nmOpen = new JMenuItem("Загрузить исходные данные");
 		nmOpen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FileDialog fileChooser = new FileDialog(_frame,"Загрузка исходных данных",FileDialog.LOAD);
-				fileChooser.setFile("*.junc");
-				fileChooser.setVisible(true);
-				File[] file = fileChooser.getFiles();
-				if (file.length > 0) {
-					ObjectInputStream fileIn = null;
-					try {
-						fileIn = new ObjectInputStream(new FileInputStream(file[0].getAbsolutePath()));
-						DataLoader data = (DataLoader) fileIn.readObject();
-						_data.loadData(data);
-					} catch (StreamCorruptedException ex) {
-						JOptionPane.showMessageDialog(_frame, "Неверный формат файла", "Ошибка при загрузке файла", JOptionPane.ERROR_MESSAGE);
-						return;
-					} catch (ClassNotFoundException ex) {
-						JOptionPane.showMessageDialog(_frame, ex.getMessage(), "Ошибка при загрузке файла", JOptionPane.ERROR_MESSAGE);
-						return;
-					} catch (IOException ex) {
-						JOptionPane.showMessageDialog(_frame, ex.getMessage(), "Ошибка при загрузке файла", JOptionPane.ERROR_MESSAGE);
-						return;
-					}
-					finally
-					{
-						try {
-							if(fileIn != null)
-								fileIn.close();
-						} catch (IOException ex) {
-						}
-					}
-				}
+				loadData();
 			}
 		});
 		mnTask.add(nmOpen);
@@ -226,7 +231,7 @@ public class appMain {
 		});
 		mnOpenData.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				loadData();
+				newData();
 			}
 		});
 		
