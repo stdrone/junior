@@ -104,24 +104,19 @@ public class JFrontierChart extends ChartPanel {
 	};
 	
 	private class ChartClick implements ChartMouseListener{
-
-		Portfolio _data;
+		
+		Portfolio _data = null;
 		@Override
 		public void chartMouseClicked(ChartMouseEvent e) {
-			if(e.getEntity() instanceof XYItemEntity)
-			{
-				if(_data != null)
-					JFrontierChart.this.Events.fireEntityClick(
-							new EventEntityClick(JFrontierChart.this, _data)
-						);
-			}
+			if(_data != null)
+				JFrontierChart.this.Events.fireEntityClick(
+						new EventEntityClick(JFrontierChart.this, _data)
+					);
 		}
 
 		@Override
 		public void chartMouseMoved(ChartMouseEvent e) {
 			// https://stackoverflow.com/questions/1512112/jfreechart-get-mouse-coordinates
-			DefaultXYDataset dataPoint = new DefaultXYDataset();
-			_data = null;
 			if(e.getEntity() instanceof XYItemEntity)
 			{
 				XYItemEntity ce = (XYItemEntity) e.getEntity();
@@ -137,10 +132,11 @@ public class JFrontierChart extends ChartPanel {
 					if(ce.getDataset() instanceof DataSetFrontier)
 						_data = ((DataSetFrontier)ce.getDataset()).getPortfolio(ce.getSeriesIndex(),  ce.getItem());
 					
+					DefaultXYDataset dataPoint = new DefaultXYDataset();
 					dataPoint.addSeries("", new double[][] {{x},{y}});
+					JFrontierChart.this._plot.setDataset(2, dataPoint);
 				}
 			}
-			JFrontierChart.this._plot.setDataset(2, dataPoint);
 		}}
 	
 	public final EntityClickSource Events = new EntityClickSource();
