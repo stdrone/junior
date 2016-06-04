@@ -272,6 +272,15 @@ public class appMain {
 		mnData.add(mnEditDB);
 		mnData.add(menuImport);
 		menuBar.add(mnData);
+		
+		JMenu nmHelp = new JMenu("Помощь");
+		menuBar.add(nmHelp);
+		
+		JMenuItem nmUserHelp = new JMenuItem("Инструкция пользователя");
+		nmHelp.add(nmUserHelp);
+		
+		JMenuItem nmAbout = new JMenuItem("О программе");
+		nmHelp.add(nmAbout);
 	}
 
 	public void setData(DataLoader data)
