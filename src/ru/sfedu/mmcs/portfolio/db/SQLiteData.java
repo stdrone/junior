@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.TreeMap;
 
+import org.apache.commons.lang3.time.DateUtils;
+
 import ru.sfedu.mmcs.portfolio.sources.SourcePrices;
 
 public class SQLiteData {
@@ -57,8 +59,33 @@ public class SQLiteData {
 		}
 		return data;
 	}
+	
+	private static Date getMinDate(TreeMap<Integer, String> actives) {
+		Date data = null;
+		for(int active : actives.keySet())
+			try {
+				PreparedStatement qry = SQLiteConnection.db().prepareStatement("SELECT min(date) FROM price p WHERE p.active = ? and (p.price is not null or p.price_new is not null)");
+				qry.setInt(1, active);
+				ResultSet rs = qry.executeQuery();
+				while (rs.next()) {
+					Date dat = rs.getDate(1);
+					if(dat != null && (data == null || dat.after(data)))
+						data = dat;
+				}
+				qry.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		return data;
+	}
 
 	public static SourcePrices getPrices(TreeMap<Integer, String> actives, Date dateFrom, Date dateTo) {
+		if(dateFrom == null && actives.size() > 0)
+		{
+			dateFrom = getMinDate(actives);
+			dateTo = DateUtils.addDays(dateFrom, 40);
+		}
 		SourcePrices data = new SourcePrices(actives, dateFrom, dateTo);
 		try {
 			for (Integer active : actives.keySet()) {

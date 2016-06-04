@@ -7,11 +7,13 @@ public class SourceLimits implements Serializable {
 	private double[][] _dataVariables;
 	private double[] _dataLimitRight;
 	private double[] _dataLimitLeft;
+	private String[] _names;
 	
-	public SourceLimits(double[][] dataVariables, double[] dataLimitsLeft, double[] dataLimitsRight) {
+	public SourceLimits(double[][] dataVariables, double[] dataLimitsLeft, double[] dataLimitsRight, String[] names) {
 		_dataVariables = dataVariables;
 		_dataLimitRight = dataLimitsRight;
 		_dataLimitLeft = dataLimitsLeft;
+		_names = names;
 	}
 	
 	public double getRightLimit(int i)
@@ -52,5 +54,9 @@ public class SourceLimits implements Serializable {
 	public int getCountLimits()
 	{
 		return _dataLimitRight.length;
+	}
+	
+	public String getName(int i) {
+		return _names[i];
 	}
 }

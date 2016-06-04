@@ -48,12 +48,12 @@ public class frmDateChooser extends JDialog implements ChangeListener {
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(new GridLayout(3, 0, 0, 0));
-		if(dateFrom != null && dateTo != null)
 		{
 			DateFormat format = new SimpleDateFormat(" dd.MM.yyyy");
-			JLabel lblAvailDate = new JLabel(String.format("Допустимы даты%s%s%s%s",
-					(dateFrom == null) ? "" : " от", format.format(dateFrom),
-					(dateTo == null) ? "" : " до", format.format(dateTo)).toString());
+			JLabel lblAvailDate = new JLabel(String.format("Выберите период %s%s%s%s%s",
+					(_dateMin == null && _dateMax == null) ? "" : ". Допустимы даты",
+					(_dateMin == null) ? "" : " от", (_dateMin == null) ? "" : format.format(_dateMin),
+					(_dateMax == null) ? "" : " до", (_dateMin == null) ? "" : format.format(_dateMax)).toString());
 			contentPanel.add(lblAvailDate);
 		}
 		_lblPeriod = new JLabel("Выбран период");
@@ -147,9 +147,9 @@ public class frmDateChooser extends JDialog implements ChangeListener {
 				changed = false;
 				UtilDateModel model = (UtilDateModel) arg0.getSource();
 				Date date = model.getValue();
-				if(date != null && date.before(_dateMin))
+				if(date != null && _dateMin != null && date.before(_dateMin))
 					model.setValue(_dateMin);
-				if(date != null && date.after(_dateMax))
+				if(date != null && _dateMax != null && date.after(_dateMax))
 					model.setValue(_dateMax);
 			}
 			changed = true;
@@ -157,11 +157,15 @@ public class frmDateChooser extends JDialog implements ChangeListener {
 			{
 				Date dateFrom = (Date)_pDateFrom.getModel().getValue(),
 						dateTo = (Date)_pDateTo.getModel().getValue();
-				if(dateFrom != null && dateTo != null && !dateFrom.equals(dateTo))
+				if(dateFrom != null && dateTo != null)
 				{
+					if(dateFrom.after(dateTo)) {
+						dateTo = (Date) dateFrom.clone();
+						((UtilDateModel)_pDateTo.getModel()).setValue(dateTo);
+					}
 					_okButton.setEnabled(true);
 					_lblPeriod.setText(String.format("Выбран период %d дня(дней)",
-							TimeUnit.DAYS.convert(dateTo.getTime() - dateFrom.getTime(),TimeUnit.MILLISECONDS)));
+							1 + TimeUnit.DAYS.convert(dateTo.getTime() - dateFrom.getTime(),TimeUnit.MILLISECONDS)));
 				}
 				else
 				{

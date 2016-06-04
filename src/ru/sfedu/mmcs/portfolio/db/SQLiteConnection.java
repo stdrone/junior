@@ -16,7 +16,7 @@ public class SQLiteConnection implements Closeable {
 		String path = SQLiteConnection.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 		//String decodedPath = URLDecoder.decode(path, "UTF-8");
 		 try {
-			_conn = new org.sqlite.SQLiteConnection(path, "test.db");
+			_conn = new org.sqlite.SQLiteConnection(path, "junior.db");
 			_stmt = _conn.createStatement();
 			_stmt.execute("PRAGMA foreign_keys = ON");
 		} catch (SQLException e) {

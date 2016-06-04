@@ -42,7 +42,7 @@ public class DataModelMeanValues extends javax.swing.table.AbstractTableModel {
 	
 	@Override
 	public String getColumnName(int column) {
-		return null;
+		return _data.getName(column);
 	}
 	
 	@Override

@@ -48,7 +48,7 @@ public class DataModelLimits extends javax.swing.table.AbstractTableModel {
 			return "B1";
 		else if(column == _data.getCountVariables() + 1)
 			return "B2";
-		return String.valueOf(column);
+		return _data.getName(column - 1);
 	}
 	
 	@Override

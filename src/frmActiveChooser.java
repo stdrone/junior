@@ -63,7 +63,8 @@ public class frmActiveChooser extends JDialog {
 					private void filter() {
 						RowFilter<DataModelActives, Object> rf = null;
 						try {
-							rf = RowFilter.regexFilter(_txtFilter.getText(), 1);
+							String filter = "(?ui)" + _txtFilter.getText();
+							rf = RowFilter.regexFilter(filter, 1);
 						} catch (java.util.regex.PatternSyntaxException e) {
 							return;
 						}

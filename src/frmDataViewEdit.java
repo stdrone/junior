@@ -3,25 +3,17 @@ import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Properties;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JFormattedTextField.AbstractFormatter;
 import javax.swing.JLabel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import org.jdatepicker.impl.JDatePanelImpl;
-import org.jdatepicker.impl.JDatePickerImpl;
-import org.jdatepicker.impl.UtilDateModel;
+
+import org.apache.commons.lang3.time.DateUtils;
 
 import ru.sfedu.mmcs.portfolio.db.SQLiteData;
 import ru.sfedu.mmcs.portfolio.db.swing.DataModelPrices;
@@ -36,8 +28,8 @@ public class frmDataViewEdit extends JDialog {
 	private JTable _table;
 	private SourcePrices _prices;
 	private SimpleDateFormat _dateFormatter = new SimpleDateFormat("dd.MM.yyyy");
-	private Date _dateFrom = new Date();
-	private Date _dateTo = new Date();
+	private Date _dateFrom = new Date(0);
+	private Date _dateTo = new Date(0);
 	private JLabel _lblDates;
 
 	/**
@@ -65,13 +57,24 @@ public class frmDataViewEdit extends JDialog {
 					frmActiveChooser aChooser = new frmActiveChooser(((DataModelPrices)_table.getModel()).getSource().getActivesData());
 					aChooser.setVisible(true);
 					if(aChooser.isOk()) {
-						SourcePrices prices = SQLiteData.getPrices(aChooser.getActives(),
-								_dateFrom, (Date)_dateTo);
+						SourcePrices prices = null;
+						if(_dateFrom.equals(new Date(0)))
+						{
+							prices = SQLiteData.getPrices(aChooser.getActives(), null, null);
+							_dateFrom = prices.getDate(0);
+							_dateTo = DateUtils.addDays(_dateFrom, 40);
+							setDates(_dateFrom, _dateTo);
+						}
+						else
+						{
+							prices = SQLiteData.getPrices(aChooser.getActives(), _dateFrom, _dateTo);
+						}
 						setModel(new DataModelPrices(prices));
 					}
 				}
 			});
-			_lblDates = new JLabel(String.format("Выбран период с %s по %s", _dateFormatter.format(_dateFrom),_dateFormatter.format(_dateTo)));
+			_lblDates = new JLabel();
+			setDates(_dateFrom, _dateTo);
 			_lblDates.setHorizontalAlignment(SwingConstants.RIGHT);
 			filterPane.add(_lblDates, "cell 0 0,alignx left,aligny center");
 			{
@@ -83,12 +86,10 @@ public class frmDataViewEdit extends JDialog {
 						fDate.setEnd(_dateTo);
 						fDate.setVisible(true);
 						if(fDate.isOk()) {
-							_dateFrom = fDate.getBegin();
-							_dateTo = fDate.getEnd();
+							setDates(fDate.getBegin(), fDate.getEnd());
 							SourcePrices prices = SQLiteData.getPrices(((DataModelPrices)_table.getModel()).getSource().getActivesData(),
 									_dateFrom, (Date)_dateTo);
 							setModel(new DataModelPrices(prices));
-							_lblDates.setText(String.format("Выбран период с %s по %s", _dateFormatter.format(_dateFrom),_dateFormatter.format(_dateTo)));
 						}
 					}
 				});
@@ -137,38 +138,21 @@ public class frmDataViewEdit extends JDialog {
 		}
 	}
 	
+	private void setDates(Date dateFrom, Date dateTo) {
+		_dateFrom = dateFrom;
+		_dateTo = dateTo;
+		_lblDates.setText(String.format("Выбран период с %s по %s", _dateFormatter.format(_dateFrom),_dateFormatter.format(_dateTo)));
+	}
+	
 	private void setModel(DataModelPrices model) {
 		_table.setModel(model);
 		for(int i = _table.getColumnCount() - 1; i > 0; --i) {
-			_table.getColumnModel().getColumn(i).setPreferredWidth(50);
+			_table.getColumnModel().getColumn(i).setPreferredWidth(65);
 		}
 		_table.getColumnModel().getColumn(0).setPreferredWidth(100);
 	}
 	
 	public SourcePrices getPrices() {
 		return _prices; 
-	}
-
-	@SuppressWarnings("serial")
-	private class DateLabelFormatter extends AbstractFormatter {
-
-		private String datePattern = "dd.MM.yyyy";
-		
-		
-		@Override
-		public Object stringToValue(String text) throws ParseException {
-			return _dateFormatter.parseObject(text);
-		}
-
-		@Override
-		public String valueToString(Object value) throws ParseException {
-			if (value != null) {
-				Calendar cal = (Calendar) value;
-				return _dateFormatter.format(cal.getTime());
-			}
-			
-			return "";
-		}
-
 	}
 }

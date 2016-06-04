@@ -37,7 +37,8 @@ public class frmLoader extends JDialog {
 	private JPanel pnManual;
 	private JPanel pnDB;
 	private JSpinner spnVariables;
-	private JSpinner spnEqations;
+	private JSpinner spnEqations1;
+	private JSpinner spnEqations2;
 	private appMain _appMain;
 	private SourcePrices _prices;
 
@@ -113,9 +114,9 @@ public class frmLoader extends JDialog {
 				pnManual.add(lblNewLabel_1, "cell 2 0,grow");
 			}
 			{
-				spnEqations = new JSpinner();
-				spnEqations.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
-				pnManual.add(spnEqations, "cell 3 0,grow");
+				spnEqations1 = new JSpinner();
+				spnEqations1.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
+				pnManual.add(spnEqations1, "cell 3 0,grow");
 			}
 		}
 		{
@@ -138,9 +139,9 @@ public class frmLoader extends JDialog {
 				pnDB.add(lblNewLabel_1, "cell 2 0,grow");
 			}
 			{
-				JSpinner spnEqations_1 = new JSpinner();
-				spnEqations_1.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
-				pnDB.add(spnEqations_1, "cell 3 0,grow");
+				spnEqations2 = new JSpinner();
+				spnEqations2.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
+				pnDB.add(spnEqations2, "cell 3 0,grow");
 			}
 			{
 				{
@@ -225,6 +226,10 @@ public class frmLoader extends JDialog {
 		return (int) spnVariables.getValue();
 	}
 	protected int getEqations() {
-		return (int) spnEqations.getValue();
+		switch(buttonGroup.getSelection().getActionCommand()) {
+		case "Manual": return (int)spnEqations1.getValue();
+		case "DB": return (int)spnEqations2.getValue();
+		}
+		return 0;
 	}
 }

@@ -225,7 +225,7 @@ public class appMain {
 			}
 		});
 		
-		JMenu mnData = new JMenu("\u0414\u0430\u043D\u043D\u044B\u0435");
+		JMenu mnData = new JMenu("Данные по активам");
 		JMenuItem menuImport = new JMenuItem("Импорт данных");
 		menuImport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -256,6 +256,15 @@ public class appMain {
 				thread.start();
 			}
 		});
+		
+		JMenuItem mnEditDB = new JMenuItem("Просмотр и редактирование");
+		mnEditDB.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				frmDataViewEdit aEdit = new frmDataViewEdit(null);
+				aEdit.setVisible(true);
+			}
+		});
+		mnData.add(mnEditDB);
 		mnData.add(menuImport);
 		menuBar.add(mnData);
 	}

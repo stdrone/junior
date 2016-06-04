@@ -32,6 +32,7 @@ public class frmEditior extends JDialog {
 	 * @param _appMain 
 	 */
 	public frmEditior(DataLoader data) {
+		setResizable(false);
 		setTitle("Условия задачи");
 		_dataLoader = data;
 		if(_dataLoader.haveSource())
@@ -44,16 +45,15 @@ public class frmEditior extends JDialog {
 				_dataLoader = null;
 		}
 		
-		setIconImage(Toolkit.getDefaultToolkit().getImage(".\\res\\app.png"));		
-		setResizable(false);
+		setIconImage(Toolkit.getDefaultToolkit().getImage(".\\res\\app.png"));
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setModal(true);
 		setModalityType(ModalityType.APPLICATION_MODAL);
-		setBounds(100, 100, 405, 478);
+		setBounds(100, 100, 405, 459);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(new MigLayout("", "[378px]", "[144px][144px]"));
+		contentPanel.setLayout(new MigLayout("", "[378px]", "[144px][164px,grow]"));
 		{
 			JPanel panel = new JPanel();
 			contentPanel.add(panel, "cell 0 0,grow");
@@ -75,7 +75,7 @@ public class frmEditior extends JDialog {
 				tabV.setRowSelectionAllowed(false);
 				if(data != null)
 				{
-					tabV.setModel(new DataModelCovariance(data.getCovariance()));
+					tabV.setModel(new DataModelCovariance(_dataLoader.getCovariance()));
 					
 					tabV.getColumnModel().getColumn(0).setResizable(false);
 					tabV.getColumnModel().getColumn(0).setPreferredWidth(23);
@@ -111,7 +111,7 @@ public class frmEditior extends JDialog {
 					tabA.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 					if(data != null)
 					{
-						tabA.setModel(new DataModelLimits(data.getLimits()));
+						tabA.setModel(new DataModelLimits(_dataLoader.getLimits()));
 						for(int i = tabA.getColumnCount() - 1; i >= 0 ; i--)
 						{
 							tabA.getColumnModel().getColumn(i).setResizable(false);
@@ -128,7 +128,7 @@ public class frmEditior extends JDialog {
 				panel.add(panel_1, "cell 0 1,grow");
 				panel_1.setLayout(new MigLayout("", "[grow][grow]", "[grow][grow]"));
 				{
-					JLabel lblNewLabel = new JLabel("Математические ожидания");
+					JLabel lblNewLabel = new JLabel("Доходности");
 					panel_1.add(lblNewLabel, "flowx,cell 0 0 3 1,grow");
 				}
 				{
@@ -142,7 +142,7 @@ public class frmEditior extends JDialog {
 					tabM.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 					if(data != null)
 					{
-						tabM.setModel(new DataModelMeanValues(data.getMeanValues()));
+						tabM.setModel(new DataModelMeanValues(_dataLoader.getMeanValues()));
 						
 						for(int i = tabM.getColumnCount() - 1; i >= 0; i--)
 						{
@@ -150,7 +150,8 @@ public class frmEditior extends JDialog {
 							tabM.getColumnModel().getColumn(i).setCellRenderer( new DecimalFormatRenderer() );
 						}
 					}
-					panel_1.add(tabM, "cell 0 1");
+					JScrollPane scrollPane = new JScrollPane(tabM);
+					panel_1.add(scrollPane, "cell 0 1");
 				}
 			}
 		}

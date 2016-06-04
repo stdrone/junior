@@ -115,12 +115,12 @@ public class DataLoader implements Serializable {
 	
 	public SourceLimits getLimits()
 	{
-		return new SourceLimits(_A, _B1, _B2);
+		return new SourceLimits(_A, _B1, _B2, _names);
 	}
 	
 	public SourceMeanValues getMeanValues()
 	{
-		return new SourceMeanValues(_M);
+		return new SourceMeanValues(_M, _names);
 	}
 	
 	public Date getDataBegin() {
