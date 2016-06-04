@@ -37,13 +37,14 @@ public class frmDateChooser extends JDialog implements ChangeListener {
 	private boolean _isOk = false;
 
 	public frmDateChooser(Date dateFrom, Date dateTo) {
+		setResizable(false);
 		setTitle("Выбор периода");
 		setModal(true);
 		_dateMin = dateFrom;
 		_dateMax = dateTo;
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(".\\res\\app.png"));
-		setBounds(100, 100, 357, 164);
+		setBounds(100, 100, 433, 164);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);

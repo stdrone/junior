@@ -82,6 +82,11 @@ public class appMain {
 		}
 		_frame.revalidate();
 		_frame.repaint();
+		_chartPanel.setVisible(isLoaded());
+	}
+	
+	private boolean isLoaded() {
+		return _data.getLoader() != null;
 	}
 	
 	private void loadData()
@@ -91,7 +96,7 @@ public class appMain {
 		updateChart();
 		Enumeration<AbstractButton> elms = grpDataExist.getElements();
 		while(elms.hasMoreElements())
-			elms.nextElement().setEnabled(_data.getLoader() != null);
+			elms.nextElement().setEnabled(isLoaded());
 	}
 	
 	private void editData()

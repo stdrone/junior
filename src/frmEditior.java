@@ -73,6 +73,7 @@ public class frmEditior extends JDialog {
 				tabV = new JTable();
 				tabV.setFillsViewportHeight(true);
 				tabV.setRowSelectionAllowed(false);
+				tabV.getTableHeader().setReorderingAllowed(false);
 				if(data != null)
 				{
 					tabV.setModel(new DataModelCovariance(_dataLoader.getCovariance()));
@@ -109,6 +110,7 @@ public class frmEditior extends JDialog {
 					tabA.setFillsViewportHeight(true);
 					tabA.setRowSelectionAllowed(false);
 					tabA.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+					tabA.getTableHeader().setReorderingAllowed(false);
 					if(data != null)
 					{
 						tabA.setModel(new DataModelLimits(_dataLoader.getLimits()));
@@ -140,6 +142,7 @@ public class frmEditior extends JDialog {
 					tabM = new JTable();
 					tabM.setRowSelectionAllowed(false);
 					tabM.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+					tabM.getTableHeader().setReorderingAllowed(false);
 					if(data != null)
 					{
 						tabM.setModel(new DataModelMeanValues(_dataLoader.getMeanValues()));

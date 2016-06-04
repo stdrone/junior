@@ -40,6 +40,10 @@ public class frmDataViewEdit extends JDialog {
 		if(_prices == null) {
 			_prices = new SourcePrices();
 		}
+		else {
+			_dateFrom = _prices.getDate(0);
+			_dateTo = _prices.getDate(-1);
+		}
 		setTitle("Просмотр и изменение данных");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(".\\res\\app.png"));
 		setModal(true);
@@ -105,6 +109,7 @@ public class frmDataViewEdit extends JDialog {
 			
 			_table = new JTable();
 			setModel(model);
+			_table.getTableHeader().setReorderingAllowed(false);
 			_table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 			JScrollPane scrollPane = new JScrollPane(_table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 			contentPanel.add(scrollPane);

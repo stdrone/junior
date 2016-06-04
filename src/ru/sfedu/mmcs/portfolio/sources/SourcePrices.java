@@ -78,8 +78,10 @@ public class SourcePrices {
 	}
 	
 	public Date getDate(int date) {
-		if(date >= _size || date < 0)
+		if(Math.abs(date) >= _size)
 			return new Date(0);
+		if(date < 0 && -date <= _size)
+			return DateUtils.addDays(_dateFrom, (int)_size + date);
 		return DateUtils.addDays(_dateFrom, date);
 	}
 

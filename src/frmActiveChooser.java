@@ -102,6 +102,7 @@ public class frmActiveChooser extends JDialog {
 			_table.setModel(model);
 			_table.setRowSorter(_sorter);
 			_table.getColumnModel().getColumn(0).setMaxWidth(25);
+			_table.getTableHeader().setReorderingAllowed(false);
 			JScrollPane scrollPane = new JScrollPane(_table);
 			contentPanel.add(scrollPane);
 		}

@@ -60,17 +60,24 @@ public class SQLiteData {
 		return data;
 	}
 	
-	private static Date getMinDate(TreeMap<Integer, String> actives) {
+	public static Date getMinMaxDate(TreeMap<Integer, String> actives, boolean min) {
 		Date data = null;
 		for(int active : actives.keySet())
 			try {
-				PreparedStatement qry = SQLiteConnection.db().prepareStatement("SELECT min(date) FROM price p WHERE p.active = ? and (p.price is not null or p.price_new is not null)");
+				PreparedStatement qry = SQLiteConnection.db().prepareStatement("SELECT min(date),max(date) FROM price p WHERE p.active = ? and (p.price is not null or p.price_new is not null)");
 				qry.setInt(1, active);
 				ResultSet rs = qry.executeQuery();
 				while (rs.next()) {
-					Date dat = rs.getDate(1);
-					if(dat != null && (data == null || dat.after(data)))
-						data = dat;
+					if(min) {
+						Date dat = rs.getDate(1);
+						if(dat != null && (data == null || dat.after(data)))
+							data = dat;
+					}
+					else {
+						Date dat = rs.getDate(2);
+						if(dat != null && (data == null || dat.before(data)))
+							data = dat;
+					}
 				}
 				qry.close();
 			} catch (SQLException e) {
@@ -83,7 +90,7 @@ public class SQLiteData {
 	public static SourcePrices getPrices(TreeMap<Integer, String> actives, Date dateFrom, Date dateTo) {
 		if(dateFrom == null && actives.size() > 0)
 		{
-			dateFrom = getMinDate(actives);
+			dateFrom = getMinMaxDate(actives, true);
 			dateTo = DateUtils.addDays(dateFrom, 40);
 		}
 		SourcePrices data = new SourcePrices(actives, dateFrom, dateTo);

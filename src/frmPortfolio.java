@@ -53,6 +53,7 @@ public class frmPortfolio extends JDialog {
 				}
 			};
 			_tabPortfolio.setFillsViewportHeight(true);
+			_tabPortfolio.getTableHeader().setReorderingAllowed(false);
 			if(_data != null)
 				_tabPortfolio.setModel(new DataModelPortfolio(_data.getSource()));
 			_tabPortfolio.getColumnModel().getColumn(0).setResizable(false);
