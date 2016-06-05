@@ -1,5 +1,7 @@
 package ru.sfedu.mmcs.portfolio;
 
+import ru.sfedu.mmcs.portfolio.frontier.Frontier;
+import ru.sfedu.mmcs.portfolio.frontier.FrontierValue;
 import ru.sfedu.mmcs.portfolio.loaders.DataLoader;
 
 public class AnalyzerData extends Analyzer {

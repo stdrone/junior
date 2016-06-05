@@ -23,7 +23,7 @@ import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.util.ShapeUtilities;
 
 import ru.sfedu.mmcs.portfolio.AnalyzerData;
-import ru.sfedu.mmcs.portfolio.Frontier;
+import ru.sfedu.mmcs.portfolio.frontier.Frontier;
 import ru.sfedu.mmcs.portfolio.swing.chart.data.DataSetActives;
 import ru.sfedu.mmcs.portfolio.swing.chart.data.DataSetFrontier;
 import ru.sfedu.mmcs.portfolio.swing.chart.data.DataSetOptimal;

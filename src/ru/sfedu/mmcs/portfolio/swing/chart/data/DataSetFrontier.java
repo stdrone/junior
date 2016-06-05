@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import org.jfree.data.xy.AbstractXYDataset;
 
 import ru.sfedu.mmcs.portfolio.Portfolio;
-import ru.sfedu.mmcs.portfolio.Frontier.FrontierData;
+import ru.sfedu.mmcs.portfolio.frontier.Frontier.FrontierData;
 
 public class DataSetFrontier extends AbstractXYDataset {
 

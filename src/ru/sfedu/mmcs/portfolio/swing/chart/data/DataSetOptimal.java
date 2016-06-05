@@ -2,9 +2,9 @@ package ru.sfedu.mmcs.portfolio.swing.chart.data;
 
 import org.jfree.data.xy.AbstractXYDataset;
 
-import ru.sfedu.mmcs.portfolio.Frontier;
 import ru.sfedu.mmcs.portfolio.Portfolio;
-import ru.sfedu.mmcs.portfolio.Frontier.FrontierData;
+import ru.sfedu.mmcs.portfolio.frontier.Frontier;
+import ru.sfedu.mmcs.portfolio.frontier.Frontier.FrontierData;
 
 public class DataSetOptimal extends AbstractXYDataset {
 

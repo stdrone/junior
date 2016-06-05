@@ -1,4 +1,4 @@
-package ru.sfedu.mmcs.portfolio;
+package ru.sfedu.mmcs.portfolio.frontier;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -12,6 +12,7 @@ import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.SingularMatrixException;
 import org.apache.commons.math3.stat.StatUtils;
 
+import ru.sfedu.mmcs.portfolio.Portfolio;
 import ru.sfedu.mmcs.portfolio.loaders.DataLoader;
 
 public class FrontierValue extends Frontier {

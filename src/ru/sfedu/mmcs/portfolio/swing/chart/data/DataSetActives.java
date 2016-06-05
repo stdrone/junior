@@ -9,7 +9,7 @@ import org.apache.commons.math3.util.Pair;
 import org.jfree.data.xy.AbstractXYDataset;
 
 import ru.sfedu.mmcs.portfolio.Portfolio;
-import ru.sfedu.mmcs.portfolio.Frontier.FrontierData;
+import ru.sfedu.mmcs.portfolio.frontier.Frontier.FrontierData;
 
 public class DataSetActives extends AbstractXYDataset {
 

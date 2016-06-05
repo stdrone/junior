@@ -1,10 +1,11 @@
-package ru.sfedu.mmcs.portfolio;
+package ru.sfedu.mmcs.portfolio.frontier;
 
 import java.util.LinkedList;
 import java.util.TreeMap;
 
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
+import ru.sfedu.mmcs.portfolio.Portfolio;
 import ru.sfedu.mmcs.portfolio.loaders.DataLoader;
 
 public abstract class Frontier {
