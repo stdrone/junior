@@ -1,6 +1,9 @@
-package ru.sfedu.mmcs.portfolio;
+package ru.sfedu.mmcs.portfolio.sources;
 
 import java.util.Map.Entry;
+
+import ru.sfedu.mmcs.portfolio.Portfolio;
+
 import java.util.TreeMap;
 
 public class PortfolioList {
@@ -9,7 +12,7 @@ public class PortfolioList {
 	private TreeMap<Integer, String> _activeNames;
 	private Portfolio[] _data;
 	
-	PortfolioList(TreeMap<String, Portfolio> src) {
+	public PortfolioList(TreeMap<String, Portfolio> src) {
 		int n = src.size();
 		_portfolioNames = new String[n];
 		_activeNames = new TreeMap<Integer, String>();

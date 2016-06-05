@@ -13,6 +13,7 @@ import ru.sfedu.mmcs.portfolio.methods.MethodRatio;
 import ru.sfedu.mmcs.portfolio.methods.MethodRaw;
 import ru.sfedu.mmcs.portfolio.methods.MethodRisk;
 import ru.sfedu.mmcs.portfolio.methods.MethodValue;
+import ru.sfedu.mmcs.portfolio.sources.PortfolioList;
 
 public class AnalyzerPortfolio extends Analyzer {
 	

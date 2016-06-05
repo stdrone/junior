@@ -1,6 +1,6 @@
 package ru.sfedu.mmcs.portfolio.swing;
 
-import ru.sfedu.mmcs.portfolio.PortfolioList;
+import ru.sfedu.mmcs.portfolio.sources.PortfolioList;
 
 public class DataModelPortfolio extends javax.swing.table.AbstractTableModel {
 
