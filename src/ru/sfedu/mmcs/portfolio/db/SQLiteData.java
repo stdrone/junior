@@ -13,8 +13,8 @@ import ru.sfedu.mmcs.portfolio.sources.SourcePrices;
 public class SQLiteData {
 	public static void setPrice(Date date, String active, Double price, Double price_new) {
 		try {
-			PreparedStatement qry = SQLiteConnection.db().prepareStatement("SELECT id FROM active WHERE name = ?");
-			qry.setString(1, active);
+			PreparedStatement qry = SQLiteConnection.db().prepareStatement("SELECT id FROM active WHERE upper(name) = ?");
+			qry.setString(1, active.toUpperCase());
 			ResultSet rs = qry.executeQuery();
 			int id;
 			if (!rs.next()) {
@@ -123,5 +123,21 @@ public class SQLiteData {
 			e.printStackTrace();
 		}
 		return data;
+	}
+	
+	public static void removeActive(int id) {
+		try {
+			SQLiteConnection.db().startTransaction();
+			PreparedStatement qry = SQLiteConnection.db().prepareStatement("DELETE FROM price WHERE active = ?");
+			qry.setInt(1, id);
+			qry.execute();
+			qry = SQLiteConnection.db().prepareStatement("DELETE FROM active WHERE id = ?");
+			qry.setInt(1, id);
+			qry.execute();
+			SQLiteConnection.db().commit();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

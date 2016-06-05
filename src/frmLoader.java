@@ -80,7 +80,7 @@ public class frmLoader extends JDialog {
 					on_change();
 				}
 			});
-			contentPanel.setLayout(new MigLayout("", "[484px]", "[26px][33px][34px][37px]"));
+			contentPanel.setLayout(new MigLayout("", "[grow]", "[26px][33px][34px][37px][]"));
 			{
 				JPanel panel = new JPanel();
 				contentPanel.add(panel, "cell 0 0,grow");

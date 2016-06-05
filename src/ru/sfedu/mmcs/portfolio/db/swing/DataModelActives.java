@@ -1,9 +1,12 @@
 package ru.sfedu.mmcs.portfolio.db.swing;
 
+import java.util.Date;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import javax.swing.table.AbstractTableModel;
+
+import ru.sfedu.mmcs.portfolio.db.SQLiteData;
 
 public class DataModelActives extends AbstractTableModel {
 	private static final long serialVersionUID = 4254328213046888333L;
@@ -12,21 +15,16 @@ public class DataModelActives extends AbstractTableModel {
 	private int[] _activeIds;
 	private boolean[] _choosen;
 
-	public DataModelActives(TreeMap<Integer,String> actives,TreeMap<Integer,String> chosen) {
-		init(actives,chosen);
+	public DataModelActives(TreeMap<Integer,String> chosen) {
+		init(chosen);
 	}
 
 	public DataModelActives() {
-		_activeNames = new String[0];
-		_activeIds = new int[0];
-		_choosen = new boolean[0];
+		init(new TreeMap<Integer,String>());
 	}
 	
-	public DataModelActives(TreeMap<Integer,String> actives) {
-		init(actives, new TreeMap<Integer,String>());
-	}
-	
-	private void init(TreeMap<Integer,String> actives,TreeMap<Integer,String> chosen) {
+	private void init(TreeMap<Integer,String> chosen) {
+		TreeMap<Integer,String> actives = SQLiteData.getActives();
 		_activeNames = new String[actives.size()];
 		_activeIds = new int[_activeNames.length];
 		_choosen = new boolean[_activeNames.length];
@@ -39,10 +37,9 @@ public class DataModelActives extends AbstractTableModel {
 			i ++;
 		}
 	}
-
+	
 	@Override
 	public int getColumnCount() {
-		// TODO Auto-generated method stub
 		return 2;
 	}
 
@@ -50,6 +47,18 @@ public class DataModelActives extends AbstractTableModel {
 	public int getRowCount() {
 		return _activeIds.length;
 		
+	}
+
+	public void removeRow(int row) {
+		SQLiteData.removeActive(_activeIds[row]);
+		init(getChoosen());
+		fireTableDataChanged();
+	}
+	
+	public void addRow(String name) {
+		SQLiteData.setPrice(new Date(), name, null, null);
+		init(getChoosen());
+		fireTableDataChanged();
 	}
 
 	@Override

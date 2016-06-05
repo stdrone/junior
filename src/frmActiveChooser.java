@@ -13,7 +13,6 @@ import javax.swing.JScrollPane;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
-import ru.sfedu.mmcs.portfolio.db.SQLiteData;
 import ru.sfedu.mmcs.portfolio.db.swing.DataModelActives;
 
 import javax.swing.JTextField;
@@ -21,7 +20,9 @@ import javax.swing.RowFilter;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.JLabel;
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +49,7 @@ public class frmActiveChooser extends JDialog {
 		setTitle("Выбор активов");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(".\\res\\app.png"));
 		setModal(true);
-		setBounds(100, 100, 370, 317);
+		setBounds(100, 100, 392, 317);
 		_actives = actives;
 		getContentPane().setLayout(new BorderLayout());
 		{
@@ -109,17 +110,40 @@ public class frmActiveChooser extends JDialog {
 				});
 				filterPane.add(_txtFilter);
 			}
+			JPanel panel_eq = new JPanel();
+			JButton buttonPlus = new JButton("");
+			buttonPlus.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					((DataModelActives)_table.getModel()).addRow(_txtFilter.getText());
+				}
+			});
+			buttonPlus.setBorder(BorderFactory.createEmptyBorder());
+			buttonPlus.setIcon(new ImageIcon(".\\res\\plus.png"));
+			panel_eq.add(buttonPlus);
+			JButton buttonMinus = new JButton("");
+			buttonMinus.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if(_table.getRowCount() > 0) {
+						((DataModelActives)_table.getModel()).removeRow(
+								_table.convertRowIndexToModel(_table.getSelectedRow())
+							);
+					}
+				}
+			});
+			buttonMinus.setBorder(BorderFactory.createEmptyBorder());
+			buttonMinus.setIcon(new ImageIcon(".\\res\\minus.png"));
+			panel_eq.add(buttonMinus);
+			filterPane.add(panel_eq);
 		}
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		{
-			DataModelActives model = new DataModelActives(SQLiteData.getActives(),actives);
+			DataModelActives model = new DataModelActives(_actives);
 			_sorter = new TableRowSorter<DataModelActives>(model);
 			contentPanel.setLayout(new BorderLayout(0, 0));
 			List<RowSorter.SortKey> sortKeys = new ArrayList<RowSorter.SortKey>();
 			sortKeys.add(new RowSorter.SortKey(1, SortOrder.ASCENDING));
 			_sorter.setSortKeys(sortKeys); 
-			
 			_table = new JTable();
 			_table.setModel(model);
 			_table.setRowSorter(_sorter);
@@ -155,7 +179,7 @@ public class frmActiveChooser extends JDialog {
 			}
 		}
 	}
-	
+
 	private void oK() {
 		_actives = ((DataModelActives)_table.getModel()).getChoosen();
 		_isOk = true;
