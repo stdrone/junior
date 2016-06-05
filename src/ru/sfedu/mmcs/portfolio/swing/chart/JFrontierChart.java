@@ -13,6 +13,7 @@ import org.jfree.chart.ChartMouseListener;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.entity.XYItemEntity;
 import org.jfree.chart.event.PlotChangeEvent;
 import org.jfree.chart.event.PlotChangeListener;
 import org.jfree.chart.plot.PlotOrientation;
@@ -20,9 +21,11 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.AbstractRenderer;
 import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.data.xy.DefaultXYDataset;
 import org.jfree.util.ShapeUtilities;
 
 import ru.sfedu.mmcs.portfolio.AnalyzerData;
+import ru.sfedu.mmcs.portfolio.Portfolio;
 import ru.sfedu.mmcs.portfolio.frontier.Frontier;
 import ru.sfedu.mmcs.portfolio.swing.chart.data.DataSetActives;
 import ru.sfedu.mmcs.portfolio.swing.chart.data.DataSetFrontier;
@@ -114,21 +117,44 @@ public class JFrontierChart extends ChartPanel {
 	};
 	
 	private class ChartClick implements ChartMouseListener{
+		private Portfolio _data;
+
 		@Override
 		public void chartMouseClicked(ChartMouseEvent e) {
-			Point2D p = JFrontierChart.this.translateScreenToJava2D(e.getTrigger().getPoint());
-			Rectangle2D plotArea = JFrontierChart.this.getScreenDataArea();
-			XYPlot plot = (XYPlot) e.getChart().getPlot(); // your plot
-			double chartX = plot.getDomainAxis().java2DToValue(p.getX(), plotArea, plot.getDomainAxisEdge());
-			//double chartY = plot.getRangeAxis().java2DToValue(p.getY(), plotArea, plot.getRangeAxisEdge());
-			if(JFrontierChart.this._frontier != null)
+			if(_data != null) 
+				JFrontierChart.this.Events.fireEntityClick(new EventEntityClick(JFrontierChart.this, _data));
+			else if(JFrontierChart.this._frontier != null) {
+				Point2D p = JFrontierChart.this.translateScreenToJava2D(e.getTrigger().getPoint());
+				Rectangle2D plotArea = JFrontierChart.this.getScreenDataArea();
+				XYPlot plot = JFrontierChart.this._plot;
+				double chartX = plot.getDomainAxis().java2DToValue(p.getX(), plotArea, plot.getDomainAxisEdge());
+				//double chartY = plot.getRangeAxis().java2DToValue(p.getY(), plotArea, plot.getRangeAxisEdge());
 				JFrontierChart.this.Events.fireEntityClick(
 						new EventEntityClick(JFrontierChart.this, JFrontierChart.this._frontier.calcPortfolio(new Vector2D(chartX, 0)))
 					);
+			}
 		}
 
 		@Override
 		public void chartMouseMoved(ChartMouseEvent e) {
+			DefaultXYDataset dataPoint = new DefaultXYDataset();
+			_data = null;
+			if(e.getEntity() instanceof XYItemEntity)
+			{
+				XYItemEntity ce = (XYItemEntity) e.getEntity();
+				
+				if(ce.getDataset() instanceof DataSetOptimal)
+				{
+					double x = (double) ce.getDataset().getX(ce.getSeriesIndex(),  ce.getItem());
+					double y = (double) ce.getDataset().getY(ce.getSeriesIndex(),  ce.getItem());
+					
+					if(ce.getDataset() instanceof DataSetOptimal)
+						_data = ((DataSetOptimal)ce.getDataset()).getPortfolio(ce.getSeriesIndex(),  ce.getItem());
+					
+					dataPoint.addSeries("", new double[][] {{x},{y}});
+				}
+			}
+			JFrontierChart.this._plot.setDataset(2, dataPoint);
 		}
 	}
 	
