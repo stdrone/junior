@@ -87,13 +87,13 @@ public class JFrontierChart extends ChartPanel {
         
         chartPanel._plot.setRenderer(2, new XYLineAndShapeRenderer());
         ((AbstractRenderer) chartPanel._plot.getRenderer(2)).setAutoPopulateSeriesShape(false);
+        ((AbstractRenderer) chartPanel._plot.getRenderer(2)).setAutoPopulateSeriesPaint(false);
         chartPanel._plot.getRenderer(2).setBaseShape(ShapeUtilities.createDiagonalCross(3, 1));
+        chartPanel._plot.getRenderer(2).setBasePaint(Color.BLACK);
         chartPanel._plot.getRenderer(2).setBaseSeriesVisibleInLegend(false);
 
         chartPanel._plot.setRenderer(3, new XYLineAndShapeRenderer());
         ((AbstractRenderer) chartPanel._plot.getRenderer(3)).setAutoPopulateSeriesShape(false);
-        ((AbstractRenderer) chartPanel._plot.getRenderer(3)).setAutoPopulateSeriesPaint(false);
-        chartPanel._plot.getRenderer(3).setBasePaint(Color.BLACK);
         chartPanel._plot.getRenderer(3).setBaseShape(new Ellipse2D.Double(-3, -3, 6, 6));
 
         chartPanel.setHorizontalAxisTrace(true);

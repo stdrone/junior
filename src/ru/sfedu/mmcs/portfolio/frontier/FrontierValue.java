@@ -2,7 +2,6 @@ package ru.sfedu.mmcs.portfolio.frontier;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.TreeMap;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 import org.apache.commons.math3.linear.DecompositionSolver;
@@ -14,6 +13,7 @@ import org.apache.commons.math3.stat.StatUtils;
 
 import ru.sfedu.mmcs.portfolio.Portfolio;
 import ru.sfedu.mmcs.portfolio.loaders.DataLoader;
+import ru.sfedu.mmcs.portfolio.methods.MethodGame;
 
 public class FrontierValue extends Frontier {
 
@@ -74,32 +74,29 @@ public class FrontierValue extends Frontier {
 	}
 	
 	public Portfolio calcPortfolio(Vector2D var) {
-		TreeMap<String, Double> X = new TreeMap<String,Double>();
-		for(int j = _solve.length - 1; j >= 0; j--)
-			if(_varList.containsKey(j + 1) && _varList.get(j + 1) != "")
-				X.put(_varList.get(j + 1), _solve[j][0] * var.getX() + _solve[j][1]);
-		return new Portfolio(X, var);
-	}
-	
-	private void addData(Vector2D var) {
-		addPortfolio("", calcPortfolio(var));
+		for(Edge e : _results) {
+			if(e.contains(var.getX()))
+				return e.calcPortfolio(var.getX());
+		}
+		return null;
 	}
 	
 	private void addData(double[] a, double minM, double maxM)
 	{
-		addSeries(String.join(", ", (String[])_varList.values().toArray(new String[0])));
+		EdgeValue edge = new EdgeValue(minM, maxM, a[0], a[1], a[2]);
+		EdgeValue.Portfolio portfolio = new EdgeValue.Portfolio(edge);
+		for(int j = _solve.length - 1; j >= 0; j--)
+			if(_varList.containsKey(j + 1) && _varList.get(j + 1) != "")
+				portfolio.add(_varList.get(j + 1), _solve[j][0], _solve[j][1]);
+		edge.setPortfolio(portfolio);
+		addEdge(edge);
 		
 		double high = - 2 * a[0] / a[1];
 		if(high > minM && high <= maxM)
 			addOptimalPoint("Отношение Шарпа", calcPortfolio(new Vector2D(high, a[0] + high*a[1] + high*high*a[2])));
 		
-		
-		double step = (maxM - minM) / 100;
-		for(double m = minM; m <= maxM; m += step)
-		{
-			addData(new Vector2D(m, a[0] + m*a[1] + m*m*a[2]));
-		}
-		addData(new Vector2D(maxM, a[0] + maxM*a[1] + maxM*maxM*a[2]));
+		MethodGame m = new MethodGame(_data, edge.calcPortfolio(minM));
+		addOptimalPoint("Игра", m.calculcatePortfolio(null));
 	}
 	
 	private void calcResults() {

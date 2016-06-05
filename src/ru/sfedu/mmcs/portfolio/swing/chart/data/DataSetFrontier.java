@@ -3,17 +3,16 @@ package ru.sfedu.mmcs.portfolio.swing.chart.data;
 import java.util.LinkedList;
 import org.jfree.data.xy.AbstractXYDataset;
 
-import ru.sfedu.mmcs.portfolio.Portfolio;
-import ru.sfedu.mmcs.portfolio.frontier.Frontier.FrontierData;
+import ru.sfedu.mmcs.portfolio.frontier.Edge;
 
 public class DataSetFrontier extends AbstractXYDataset {
 
 	private static final long serialVersionUID = 3136129879221026365L;
 	
-	private FrontierData[] _frontier;
+	private Edge[] _frontier;
 		
-	public DataSetFrontier(LinkedList<FrontierData> frontier) {
-		_frontier = new FrontierData[frontier.size()];
+	public DataSetFrontier(LinkedList<Edge> frontier) {
+		_frontier = new Edge[frontier.size()];
 		frontier.toArray(_frontier);
 	}
 	
@@ -24,12 +23,12 @@ public class DataSetFrontier extends AbstractXYDataset {
 
 	@Override
 	public Number getX(int series, int item) {
-		return _frontier[series].get(item).getValue();
+		return _frontier[series].getM(item);
 	}
 
 	@Override
 	public Number getY(int series, int item) {
-		return _frontier[series].get(item).getRisk();
+		return _frontier[series].getV(item);
 	}
 
 	@Override
@@ -43,10 +42,5 @@ public class DataSetFrontier extends AbstractXYDataset {
 		if(_frontier.length > 0)
 			return "Граница " + _frontier[series].getName();
 		return "";
-	}
-	
-	public Portfolio getPortfolio(int series, int item)
-	{
-		return _frontier[series].get(item);
 	}
 }

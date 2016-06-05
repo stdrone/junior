@@ -8,8 +8,7 @@ import java.util.TreeMap;
 import org.apache.commons.math3.util.Pair;
 import org.jfree.data.xy.AbstractXYDataset;
 
-import ru.sfedu.mmcs.portfolio.Portfolio;
-import ru.sfedu.mmcs.portfolio.frontier.Frontier.FrontierData;
+import ru.sfedu.mmcs.portfolio.frontier.Edge;
 
 public class DataSetActives extends AbstractXYDataset {
 
@@ -18,20 +17,20 @@ public class DataSetActives extends AbstractXYDataset {
 	private TreeMap<Integer,ArrayList<Pair<Double,Double>>> _data;
 	private ArrayList<String> _names;
 		
-	public DataSetActives(LinkedList<FrontierData> frontier) {
+	public DataSetActives(LinkedList<Edge> frontier) {
 		TreeMap<String,TreeMap<Double,Double>> data = new TreeMap<String,TreeMap<Double,Double>>();
 		_data = new TreeMap<Integer,ArrayList<Pair<Double,Double>>>();
 		_names = new ArrayList<String>();
 		
-		for(FrontierData d : frontier)
+		for(Edge d : frontier)
 		{
-			for(Entry<Double, Portfolio> e : d.entrySet())
+			for(int i = 0; i < d.size(); ++i)
 			{
-				for(Entry<String, Double> a : e.getValue().getActives().entrySet())
+				for(Entry<String, Double> a : d.calcPortfolio(d.getM(i)).getActives().entrySet())
 				{
 					if(!data.containsKey(a.getKey()))
 						data.put(a.getKey(), new TreeMap<Double,Double>());
-					data.get(a.getKey()).put(e.getKey(), a.getValue());
+					data.get(a.getKey()).put(d.getM(i), a.getValue());
 				}
 			}
 		}

@@ -71,8 +71,8 @@ public abstract class Frontier {
 			return super.put(key, value);
 		}
 	};
-	private final LinkedList<FrontierData> _results = new LinkedList<FrontierData>();
-	private final TreeMap<String, FrontierData> _optimalPoints = new TreeMap<String, FrontierData>();
+	protected final LinkedList<Edge> _results = new LinkedList<Edge>();
+	protected final TreeMap<String, FrontierData> _optimalPoints = new TreeMap<String, FrontierData>();
 
 	public Frontier(DataLoader data) {
 		if(data != null)
@@ -86,14 +86,9 @@ public abstract class Frontier {
 
 	protected abstract void calculate();
 	
-	protected void addSeries(String name)
+	protected void addEdge(Edge edge)
 	{
-		_results.add(new FrontierData(name));
-	}
-	
-	protected void addPortfolio(String method, Portfolio portfolio)
-	{
-		_results.getLast().put(portfolio.getValue(), portfolio);
+		_results.add(edge);
 	}
 	
 	public abstract Portfolio calcPortfolio(Vector2D var);
@@ -105,7 +100,7 @@ public abstract class Frontier {
 		_optimalPoints.put(String.format("%s (%s)", name, portfolio.getName()) , data);
 	}
 	
-	public LinkedList<FrontierData> getFrontier() {
+	public LinkedList<Edge> getFrontier() {
 		return _results;
 	}
 	
