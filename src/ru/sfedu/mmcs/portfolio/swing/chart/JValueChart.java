@@ -2,9 +2,11 @@ package ru.sfedu.mmcs.portfolio.swing.chart;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -30,17 +32,28 @@ public class JValueChart extends ChartPanel {
 
 	public void refresh(AnalyzerPortfolio data, Portfolio portfolio, Date dateFrom, Date dateTo)
 	{
-		TreeMap<Date, Double> future = data.getFutureValue(portfolio, dateFrom, dateTo);
+		TreeMap<Date, Map<String,Double>> future = data.getFutureValue(portfolio, dateFrom, dateTo);
 		final TimeSeries fact = new TimeSeries( "Факт" );
 		final TimeSeries wait = new TimeSeries( "Ожидание" );
 		
-		double value = 1, dValue = portfolio.getValue(), fValue = 1;
-		for(Entry<Date, Double> f : future.entrySet())
+		double wValue = 1, dwValue = portfolio.getValue(), fValue = 1;
+		Day day = new Day(DateUtils.addDays(future.firstKey(), -1));
+		fact.add(day, fValue);
+		wait.add(day, wValue);
+		double dfValue, Xj, Yj;
+		for(Entry<Date, Map<String,Double>> f : future.entrySet())
 		{
-			value = value * (1 + dValue);
-			fValue = fValue * (1 + f.getValue());
-			fact.add(new Day(f.getKey()), fValue);
-			wait.add(new Day(f.getKey()), value);
+			dfValue = 0.0;
+			for(Entry<String, Double> partOf : portfolio.getActives().entrySet()) {
+				Xj = partOf.getValue();
+				Yj = f.getValue().get(partOf.getKey());
+				dfValue += Xj*Yj;
+			}
+			fValue = fValue*(1+dfValue);
+			wValue = wValue * (1 + dwValue);
+			day = new Day(f.getKey());
+			fact.add(day, fValue);
+			wait.add(day, wValue);
 		}
 		
 		_plot.setDataset(new TimeSeriesCollection(fact));

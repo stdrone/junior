@@ -1,11 +1,9 @@
 package ru.sfedu.mmcs.portfolio;
 
 import java.util.Date;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
-
-import org.apache.commons.math3.linear.Array2DRowRealMatrix;
-import org.apache.commons.math3.linear.RealMatrix;
 
 import ru.sfedu.mmcs.portfolio.loaders.DataLoader;
 
@@ -43,24 +41,22 @@ public abstract class Analyzer {
 		return _data.haveFuture();
 	}
 	
-	public TreeMap<Date, Double> getFutureValue(Portfolio portfolio, Date dateFrom, Date dateTo) {
-		TreeMap<Date, Double> result = new TreeMap<Date, Double>(); 
+	public TreeMap<Date, Map<String,Double>> getFutureValue(Portfolio portfolio, Date dateFrom, Date dateTo) {
+		TreeMap<Date, Map<String,Double>> result = new TreeMap<Date, Map<String,Double>>(); 
 		TreeMap<Date, Double[]> data = _data.getFutureData(dateFrom,dateTo);
 		
 		int[] idx = _data.getPortfolioBind(portfolio);
 		double[] aX = new double[idx.length];
 		for(int i = idx.length - 1; i >= 0; i--)
 			aX[i] = portfolio.getActives().get(_data.getName(idx[i]));
-		RealMatrix X = new Array2DRowRealMatrix(aX).transpose();
 		
 		for(Entry<Date, Double[]> row : data.entrySet())
 		{
-			double[] dRow = new double[idx.length];
-			for(int i = dRow.length - 1; i >= 0; i--)
-				dRow[i] = row.getValue()[idx[i]];
-			RealMatrix pR = new Array2DRowRealMatrix(dRow);
+			TreeMap<String,Double> dRow = new TreeMap<String, Double>();
+			for(int i = idx.length - 1; i >= 0; i--)
+				dRow.put(_data.getName(idx[i]), row.getValue()[idx[i]]);
 			
-			result.put(row.getKey(), X.multiply(pR).getEntry(0, 0));
+			result.put(row.getKey(), dRow);
 		}
 		return result;
 	}
