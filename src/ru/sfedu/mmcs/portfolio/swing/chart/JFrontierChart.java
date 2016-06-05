@@ -78,8 +78,6 @@ public class JFrontierChart extends ChartPanel {
         chartPanel._plot.mapDatasetToRangeAxis(2,0);
         
         chartPanel._plot.setRenderer(0, new StandardXYItemRenderer());
-        //((AbstractRenderer) chartPanel._plot.getRenderer(0)).setAutoPopulateSeriesShape(false);
-        //chartPanel._plot.getRenderer(0).setBaseShape(new Ellipse2D.Double(-1, -1, 2, 2));
         
         chartPanel._plot.setRenderer(1, new StandardXYItemRenderer());
         ((AbstractRenderer) chartPanel._plot.getRenderer(1)).setAutoPopulateSeriesStroke(false);
