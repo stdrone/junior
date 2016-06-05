@@ -72,7 +72,7 @@ public class FrontierValue extends Frontier {
 		return true;
 	}
 	
-	private Portfolio calcPortfolio(Vector2D var) {
+	public Portfolio calcPortfolio(Vector2D var) {
 		TreeMap<String, Double> X = new TreeMap<String,Double>();
 		for(int j = _solve.length - 1; j >= 0; j--)
 			if(_varList.containsKey(j + 1) && _varList.get(j + 1) != "")
@@ -129,30 +129,24 @@ public class FrontierValue extends Frontier {
 		_muBorders = new double[] {_minM, _maxM};
 		_weakColumns[0] = 0;
 		_weakColumns[1] = 0;
-		for(int i = 0; i < _solve.length-2; i++)
-		{
-			if(_solve[i][0] > 0)
-			{
+		for(int i = 0; i < _solve.length-2; i++) {
+			if(_solve[i][0] > 0) {
 				tmp[0] = -_solve[i][1] / _solve[i][0];
 				tmp[1] = _maxM;
 			}
-			else if(_solve[i][0] < 0)
-			{
+			else if(_solve[i][0] < 0) {
 				tmp[0] = _minM;
 				tmp[1] = -_solve[i][1] / _solve[i][0];
 			}
-			else
-			{
+			else {
 				tmp[0] = _minM;
 				tmp[1] = _maxM;
 			}
-			if(_muBorders[0] < tmp[0])
-			{
+			if(_muBorders[0] < tmp[0]) {
 				_muBorders[0] = tmp[0];
 				_weakColumns[0] = i;
 			}
-			if(_muBorders[1] > tmp[1] && _varList.containsKey(i+1))
-			{
+			if(_muBorders[1] > tmp[1] && _varList.containsKey(i+1)) {
 				_muBorders[1] = tmp[1];
 				_weakColumns[1] = i;
 			}
@@ -163,12 +157,10 @@ public class FrontierValue extends Frontier {
 	private void changeWeakColumn()
 	{
 		RealMatrix mr = genMatrix();
-		if(_weakColumns[1] < _data.getN())
-		{
+		if(_weakColumns[1] < _data.getN()) {
 			mr = mr.getColumnMatrix(_data.getN() + _weakColumns[1]);
 		}
-		else if(_weakColumns[1] < _data.getN() + 2*_data.getP())
-		{
+		else if(_weakColumns[1] < _data.getN() + 2*_data.getP()) {
 			mr = mr.getColumnMatrix(_data.getN() + 2 * _data.getP() + _weakColumns[1]);
 		}
 		_m.setColumnMatrix(_weakColumns[1], mr);
@@ -180,8 +172,7 @@ public class FrontierValue extends Frontier {
 		
 		matrix.setEntry(_data.getN() + 2*_data.getP(), 1, 1);
 		matrix.setEntry(_data.getN() + 2*_data.getP() + 1, 0, 1);
-		for(int i = 0; i < _data.getP(); i++)
-		{
+		for(int i = 0; i < _data.getP(); i++) {
 			matrix.setEntry(_data.getN() + i, 1, _data.getB(1)[i]);
 			matrix.setEntry(_data.getN() + _data.getP() + i, 1, _data.getB(2)[i]);
 		}

@@ -9,8 +9,8 @@ import ru.sfedu.mmcs.portfolio.sources.SourcePrices;
 @SuppressWarnings("serial")
 public class DataLoaderDB extends DataLoader {
 
-	public DataLoaderDB(int p, SourcePrices prices) {
-		super(prices.getCountActives(),p,new double[prices.getCountActives()][prices.getCountActives()],new double[p][prices.getCountActives()],new double[prices.getCountActives()],new double[p],new double[p], new String[prices.getCountActives()]);
+	public DataLoaderDB(SourcePrices prices) {
+		super(prices.getCountActives(),0,new double[prices.getCountActives()][prices.getCountActives()],new double[0][prices.getCountActives()],new double[prices.getCountActives()],new double[0],new double[0], new String[prices.getCountActives()]);
 		parse(prices);
 	}
 	

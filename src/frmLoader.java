@@ -37,8 +37,6 @@ public class frmLoader extends JDialog {
 	private JPanel pnManual;
 	private JPanel pnDB;
 	private JSpinner spnVariables;
-	private JSpinner spnEqations1;
-	private JSpinner spnEqations2;
 	private appMain _appMain;
 	private SourcePrices _prices;
 
@@ -70,12 +68,12 @@ public class frmLoader extends JDialog {
 		setModal(true);
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 514, 257);
+		setBounds(100, 100, 408, 257);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		{
-			JRadioButton rbnManual = new JRadioButton("Ввести ковариационную матрицу, матрицу доходностей и ограничения вручную");
+			JRadioButton rbnManual = new JRadioButton("Ввести ковариационную матрицу и матрицу доходностей вручную");
 			rbnManual.setSelected(true);
 			rbnManual.addChangeListener(new ChangeListener() {
 				public void stateChanged(ChangeEvent arg0) {
@@ -99,7 +97,7 @@ public class frmLoader extends JDialog {
 		{
 			pnManual = new JPanel();
 			contentPanel.add(pnManual, "cell 0 2,grow");
-			pnManual.setLayout(new MigLayout("", "[grow][55px][grow][55px]", "[32px]"));
+			pnManual.setLayout(new MigLayout("", "[grow][55px]", "[32px]"));
 			{
 				JLabel lblNewLabel = new JLabel("Количество ценных бумаг");
 				pnManual.add(lblNewLabel, "cell 0 0,grow");
@@ -109,18 +107,9 @@ public class frmLoader extends JDialog {
 				spnVariables.setModel(new SpinnerNumberModel(new Integer(1), new Integer(1), null, new Integer(1)));
 				pnManual.add(spnVariables, "cell 1 0,grow");
 			}
-			{
-				JLabel lblNewLabel_1 = new JLabel("\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u0439");
-				pnManual.add(lblNewLabel_1, "cell 2 0,grow");
-			}
-			{
-				spnEqations1 = new JSpinner();
-				spnEqations1.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
-				pnManual.add(spnEqations1, "cell 3 0,grow");
-			}
 		}
 		{
-			JRadioButton rbnDB = new JRadioButton("<html>Рассчитать матрицы ковариации и доходностей на основании выбранных активов, ораничения задать вручную</html>");
+			JRadioButton rbnDB = new JRadioButton("<html>Рассчитать матрицы ковариации и доходностей на основании выбранных активов</html>");
 			rbnDB.addChangeListener(new ChangeListener() {
 				public void stateChanged(ChangeEvent e) {
 					on_change();
@@ -133,16 +122,7 @@ public class frmLoader extends JDialog {
 		{
 			pnDB = new JPanel();
 			contentPanel.add(pnDB, "cell 0 4,grow");
-			pnDB.setLayout(new MigLayout("", "[grow][55px][grow][55px]", "[23px]"));
-			{
-				JLabel lblNewLabel_1 = new JLabel("\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u0439");
-				pnDB.add(lblNewLabel_1, "cell 2 0,grow");
-			}
-			{
-				spnEqations2 = new JSpinner();
-				spnEqations2.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
-				pnDB.add(spnEqations2, "cell 3 0,grow");
-			}
+			pnDB.setLayout(new MigLayout("", "[grow][55px]", "[23px]"));
 			{
 				{
 					txtCSVFile = new JLabel("Нет выбранных активов");
@@ -174,11 +154,11 @@ public class frmLoader extends JDialog {
 						switch(buttonGroup.getSelection().getActionCommand())
 						{
 						case "Manual":
-							data = new DataLoaderManual(getVariables(), getEqations());
+							data = new DataLoaderManual(getVariables());
 							break; 
 						case "DB":
 							try {
-								data = new DataLoaderDB(getEqations(), _prices);
+								data = new DataLoaderDB(_prices);
 							} catch(PortfolioException ex) {
 								JOptionPane.showMessageDialog(contentPanel, ex.getMessage(), "Ошибка при загрузке файла", JOptionPane.ERROR_MESSAGE);
 								return;
@@ -224,12 +204,5 @@ public class frmLoader extends JDialog {
 	}
 	protected int getVariables() {
 		return (int) spnVariables.getValue();
-	}
-	protected int getEqations() {
-		switch(buttonGroup.getSelection().getActionCommand()) {
-		case "Manual": return (int)spnEqations1.getValue();
-		case "DB": return (int)spnEqations2.getValue();
-		}
-		return 0;
 	}
 }

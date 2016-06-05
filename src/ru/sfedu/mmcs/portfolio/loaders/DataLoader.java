@@ -84,6 +84,35 @@ public class DataLoader implements Serializable {
 		checkData();
 	}
 	
+	public void addEquation() {
+		++_p;
+		double[] b1 = _B1, b2 = _B2;
+		double[][] a = _A;
+		_B1 = new double[_p];
+		_B2 = new double[_p];
+		_A = new double[_p][_n];
+		System.arraycopy(b1, 0, _B1, 0, _p - 1);
+		System.arraycopy(b2, 0, _B2, 0, _p - 1);
+		System.arraycopy(a, 0, _A, 0, _p - 1);
+	}
+	
+	public void delEquation(int equation) {
+		if(equation >=0 && equation < _p) {
+			--_p;
+			double[] b1 = _B1, b2 = _B2;
+			double[][] a = _A;
+			_B1 = new double[_p];
+			_B2 = new double[_p];
+			_A = new double[_p][_n];
+			System.arraycopy(b1, 0, _B1, 0, equation);
+			System.arraycopy(b2, 0, _B2, 0, equation);
+			System.arraycopy(a, 0, _A, 0, equation);
+			System.arraycopy(b1, equation + 1, _B1, equation, _p - equation);
+			System.arraycopy(b2, equation + 1, _B2, equation, _p - equation);
+			System.arraycopy(a, equation + 1, _A, equation, _p - equation);
+		}
+	}
+	
 	private void checkData()
 	{
 		if((_A.length > 0 && _V.length != _A[0].length) || _V.length != _M.length)

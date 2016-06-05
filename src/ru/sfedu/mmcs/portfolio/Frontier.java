@@ -3,6 +3,8 @@ package ru.sfedu.mmcs.portfolio;
 import java.util.LinkedList;
 import java.util.TreeMap;
 
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
+
 import ru.sfedu.mmcs.portfolio.loaders.DataLoader;
 
 public abstract class Frontier {
@@ -92,6 +94,8 @@ public abstract class Frontier {
 	{
 		_results.getLast().put(portfolio.getValue(), portfolio);
 	}
+	
+	public abstract Portfolio calcPortfolio(Vector2D var);
 	
 	public void addOptimalPoint(String name, Portfolio portfolio)
 	{

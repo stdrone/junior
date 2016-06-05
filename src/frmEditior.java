@@ -19,6 +19,9 @@ import ru.sfedu.mmcs.portfolio.swing.DecimalFormatRenderer;
 import javax.swing.JLabel;
 import javax.swing.ListSelectionModel;
 import javax.swing.JScrollPane;
+import javax.swing.ImageIcon;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 
 
 public class frmEditior extends JDialog {
@@ -26,6 +29,7 @@ public class frmEditior extends JDialog {
 	private static final long serialVersionUID = -6212371988626793009L;
 	private final JPanel contentPanel = new JPanel();
 	private DataLoader _dataLoader;
+	private JTable _tabA;
 
 	/**
 	 * Create the dialog.
@@ -101,27 +105,42 @@ public class frmEditior extends JDialog {
 				panel.add(panel_1, "cell 0 0,grow");
 				panel_1.setLayout(new MigLayout("", "[grow]", "[grow][grow]"));
 				{
+					JPanel panel_eq = new JPanel();
+					panel_eq.setLayout(new BoxLayout(panel_eq, BoxLayout.X_AXIS));
 					JLabel lblNewLabel = new JLabel("Оганичения на переменные (b1 <= Ax <= b2)");
-					panel_1.add(lblNewLabel, "flowx,cell 0 0 3 1,grow");
+					panel_eq.add(lblNewLabel);
+					panel_1.add(panel_eq, "flowx,cell 0 0 3 1,grow");
+					JButton buttonPlus = new JButton("");
+					buttonPlus.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent arg0) {
+							_dataLoader.addEquation();
+							refreshTabA();
+						}
+					});
+					buttonPlus.setBorder(BorderFactory.createEmptyBorder());
+					buttonPlus.setIcon(new ImageIcon(".\\res\\plus.png"));
+					panel_eq.add(buttonPlus);
+					JButton buttonMinus = new JButton("");
+					buttonMinus.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							if(_tabA.getRowCount() > 0) {
+								_dataLoader.delEquation(_tabA.getSelectedRow());
+								refreshTabA();
+							}
+						}
+					});
+					buttonMinus.setBorder(BorderFactory.createEmptyBorder());
+					buttonMinus.setIcon(new ImageIcon(".\\res\\minus.png"));
+					panel_eq.add(buttonMinus);
 				}
 				{
-					JTable tabA;
-					tabA = new JTable();
-					tabA.setFillsViewportHeight(true);
-					tabA.setRowSelectionAllowed(false);
-					tabA.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-					tabA.getTableHeader().setReorderingAllowed(false);
-					if(data != null)
-					{
-						tabA.setModel(new DataModelLimits(_dataLoader.getLimits()));
-						for(int i = tabA.getColumnCount() - 1; i >= 0 ; i--)
-						{
-							tabA.getColumnModel().getColumn(i).setResizable(false);
-							tabA.getColumnModel().getColumn(i).setCellRenderer( new DecimalFormatRenderer() );
-						}
-					}
-
-					JScrollPane scrollPane = new JScrollPane(tabA);
+					_tabA = new JTable();
+					_tabA.setFillsViewportHeight(true);
+					_tabA.setRowSelectionAllowed(false);
+					_tabA.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+					_tabA.getTableHeader().setReorderingAllowed(false);
+					refreshTabA();
+					JScrollPane scrollPane = new JScrollPane(_tabA);
 					panel_1.add(scrollPane, "flowx,cell 2 1,grow");
 				}
 			}
@@ -191,6 +210,18 @@ public class frmEditior extends JDialog {
 	public void setVisible(boolean b) {
 		if(_dataLoader != null)
 			super.setVisible(b);
+	}
+	
+	private void refreshTabA() {
+		if(_dataLoader != null)
+		{
+			_tabA.setModel(new DataModelLimits(_dataLoader.getLimits()));
+			for(int i = _tabA.getColumnCount() - 1; i >= 0 ; i--)
+			{
+				_tabA.getColumnModel().getColumn(i).setResizable(false);
+				_tabA.getColumnModel().getColumn(i).setCellRenderer( new DecimalFormatRenderer() );
+			}
+		}
 	}
 	
 	public DataLoader getData()
