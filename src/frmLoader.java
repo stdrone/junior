@@ -60,20 +60,20 @@ public class frmLoader extends JDialog {
 	 * @param appMain 
 	 */
 	public frmLoader(appMain appMain) {
+		setResizable(false);
 		setTitle("Новые исходные данные");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(".\\res\\app.png"));
 		_appMain = appMain;
 		_prices = new SourcePrices();
-		setResizable(false);
 		setModal(true);
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 408, 257);
+		setBounds(100, 100, 426, 292);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		{
-			JRadioButton rbnManual = new JRadioButton("Ввести ковариационную матрицу и матрицу доходностей вручную");
+			JRadioButton rbnManual = new JRadioButton("<html>Ввести ковариационную матрицу и матрицу доходностей вручную</html>");
 			rbnManual.setSelected(true);
 			rbnManual.addChangeListener(new ChangeListener() {
 				public void stateChanged(ChangeEvent arg0) {
@@ -86,7 +86,7 @@ public class frmLoader extends JDialog {
 				contentPanel.add(panel, "cell 0 0,grow");
 				panel.setLayout(new BorderLayout(0, 0));
 				{
-					JLabel label = new JLabel("Выберите способ задания условий задачи поиска минимальной границы");
+					JLabel label = new JLabel("<html>Выберите способ задания условий задачи поиска минимальной границы</html>");
 					panel.add(label);
 				}
 			}
