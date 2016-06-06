@@ -41,6 +41,7 @@ public class SQLiteConnection implements Closeable {
 				_stmt.executeUpdate("CREATE TABLE active (ID INTEGER PRIMARY KEY AUTOINCREMENT, NAME TEXT NOT NULL)");
 				_stmt.executeUpdate("CREATE TABLE price (DATE INT NOT NULL, ACTIVE INT NOT NULL, PRICE REAL, PRICE_NEW REAL, FOREIGN KEY(ACTIVE) REFERENCES ACTIVE(ID), PRIMARY KEY (DATE, ACTIVE))");
 				_stmt.executeUpdate("CREATE INDEX price_da ON price (DATE ASC,ACTIVE ASC);");
+				_stmt.executeUpdate("CREATE INDEX price_a ON price (ACTIVE ASC);");
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
