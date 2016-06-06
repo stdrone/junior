@@ -2,6 +2,7 @@ package ru.sfedu.mmcs.portfolio.swing.chart;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -119,17 +120,19 @@ public class JFrontierChart extends ChartPanel {
 
 		@Override
 		public void chartMouseClicked(ChartMouseEvent e) {
-			if(_data != null) 
-				JFrontierChart.this.Events.fireEntityClick(new EventEntityClick(JFrontierChart.this, _data));
-			else if(JFrontierChart.this._frontier != null) {
-				Point2D p = JFrontierChart.this.translateScreenToJava2D(e.getTrigger().getPoint());
-				Rectangle2D plotArea = JFrontierChart.this.getScreenDataArea();
-				XYPlot plot = JFrontierChart.this._plot;
-				double chartX = plot.getDomainAxis().java2DToValue(p.getX(), plotArea, plot.getDomainAxisEdge());
-				//double chartY = plot.getRangeAxis().java2DToValue(p.getY(), plotArea, plot.getRangeAxisEdge());
-				JFrontierChart.this.Events.fireEntityClick(
-						new EventEntityClick(JFrontierChart.this, JFrontierChart.this._frontier.calcPortfolio(new Vector2D(chartX, 0)))
-					);
+			if(e.getTrigger().getButton() == MouseEvent.BUTTON1) {
+				if(_data != null) 
+					JFrontierChart.this.Events.fireEntityClick(new EventEntityClick(JFrontierChart.this, _data));
+				else if(JFrontierChart.this._frontier != null) {
+					Point2D p = JFrontierChart.this.translateScreenToJava2D(e.getTrigger().getPoint());
+					Rectangle2D plotArea = JFrontierChart.this.getScreenDataArea();
+					XYPlot plot = JFrontierChart.this._plot;
+					double chartX = plot.getDomainAxis().java2DToValue(p.getX(), plotArea, plot.getDomainAxisEdge());
+					//double chartY = plot.getRangeAxis().java2DToValue(p.getY(), plotArea, plot.getRangeAxisEdge());
+					JFrontierChart.this.Events.fireEntityClick(
+							new EventEntityClick(JFrontierChart.this, JFrontierChart.this._frontier.calcPortfolio(new Vector2D(chartX, 0)))
+						);
+				}
 			}
 		}
 
