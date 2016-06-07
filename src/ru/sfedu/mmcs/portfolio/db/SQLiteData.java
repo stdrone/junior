@@ -13,8 +13,8 @@ import ru.sfedu.mmcs.portfolio.sources.SourcePrices;
 public class SQLiteData {
 	public static void setPrice(Date date, String active, Double price, Double price_new) {
 		try {
-			PreparedStatement qry = SQLiteConnection.db().prepareStatement("SELECT id FROM active WHERE upper(name) = ?");
-			qry.setString(1, active.toUpperCase());
+			PreparedStatement qry = SQLiteConnection.db().prepareStatement("SELECT id FROM active WHERE name = ?");
+			qry.setString(1, active);
 			ResultSet rs = qry.executeQuery();
 			int id;
 			if (!rs.next()) {
