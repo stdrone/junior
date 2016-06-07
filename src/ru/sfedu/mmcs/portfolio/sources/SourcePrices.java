@@ -45,7 +45,9 @@ public class SourcePrices {
 	
 	public Double get(int active, int date)
 	{
-		Double[] data = _prices.get(getDate(date)).get(_actives.get(active));
+		TreeMap<String,Double[]> price = _prices.get(getDate(date));
+		if(price == null) return null;
+		Double[] data = price.get(_actives.get(active));
 		if(data == null) return null;
 		return (data[1] == null) ? data[0] : data[1];
 	}
@@ -54,7 +56,8 @@ public class SourcePrices {
 	{
 		String aName = _actives.get(active);
 		Date dDate = getDate(date);
-		Double[] data = _prices.get(dDate).get(aName);
+		TreeMap<String,Double[]> pPrice = _prices.get(dDate);
+		Double[] data = (pPrice == null) ? new Double[2] : pPrice.get(aName);  
 		if(data != null)
 			data[1] = price;
 		else
