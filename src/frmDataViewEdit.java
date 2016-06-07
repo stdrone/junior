@@ -45,7 +45,7 @@ public class frmDataViewEdit extends JDialog {
 			_dateTo = _prices.getDate(-1);
 		}
 		setTitle("Просмотр и изменение данных");
-		setIconImage(Toolkit.getDefaultToolkit().getImage(".\\res\\app.png"));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(appMain.class.getResource("/res/app.png")));
 		setModal(true);
 		setBounds(100, 100, 870, 375);
 		getContentPane().setLayout(new BorderLayout());

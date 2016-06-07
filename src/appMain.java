@@ -180,7 +180,7 @@ public class appMain {
 	private void initialize() {
 		_frame = new JFrame();
 		_frame.setTitle("Учебный пакет для задачи формирования оптимального инвестиционного портфеля");
-		_frame.setIconImage(Toolkit.getDefaultToolkit().getImage(".\\res\\app.png"));
+		_frame.setIconImage(Toolkit.getDefaultToolkit().getImage(appMain.class.getResource("/res/app.png")));
 		_frame.setBounds(100, 100, 1025, 630);
 		_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		

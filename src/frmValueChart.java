@@ -14,6 +14,7 @@ import ru.sfedu.mmcs.portfolio.swing.chart.JValueChart;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
 
 public class frmValueChart extends JDialog {
 
@@ -24,6 +25,7 @@ public class frmValueChart extends JDialog {
 		setTitle("График стоимости портфеля");
 		setModal(true);
 		setBounds(100, 100, 450, 300);
+		setIconImage(Toolkit.getDefaultToolkit().getImage(appMain.class.getResource("/res/app.png")));
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);

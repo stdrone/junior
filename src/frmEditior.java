@@ -49,7 +49,7 @@ public class frmEditior extends JDialog {
 				_dataLoader = null;
 		}
 		
-		setIconImage(Toolkit.getDefaultToolkit().getImage(".\\res\\app.png"));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(appMain.class.getResource("/res/app.png")));
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setModal(true);
 		setModalityType(ModalityType.APPLICATION_MODAL);
@@ -118,7 +118,7 @@ public class frmEditior extends JDialog {
 						}
 					});
 					buttonPlus.setBorder(BorderFactory.createEmptyBorder());
-					buttonPlus.setIcon(new ImageIcon(".\\res\\plus.png"));
+					buttonPlus.setIcon(new ImageIcon(frmEditior.class.getResource("/res/plus.png")));
 					panel_eq.add(buttonPlus);
 					JButton buttonMinus = new JButton("");
 					buttonMinus.addActionListener(new ActionListener() {
@@ -130,7 +130,7 @@ public class frmEditior extends JDialog {
 						}
 					});
 					buttonMinus.setBorder(BorderFactory.createEmptyBorder());
-					buttonMinus.setIcon(new ImageIcon(".\\res\\minus.png"));
+					buttonMinus.setIcon(new ImageIcon(frmEditior.class.getResource("/res/minus.png")));
 					panel_eq.add(buttonMinus);
 				}
 				{

@@ -43,7 +43,7 @@ public class frmDateChooser extends JDialog implements ChangeListener {
 		_dateMin = dateFrom;
 		_dateMax = dateTo;
 		
-		setIconImage(Toolkit.getDefaultToolkit().getImage(".\\res\\app.png"));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(appMain.class.getResource("/res/app.png")));
 		setBounds(100, 100, 433, 164);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));

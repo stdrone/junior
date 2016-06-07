@@ -47,7 +47,7 @@ public class frmActiveChooser extends JDialog {
 	 */
 	public frmActiveChooser(TreeMap<Integer,String> actives) {
 		setTitle("Выбор активов");
-		setIconImage(Toolkit.getDefaultToolkit().getImage(".\\res\\app.png"));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(appMain.class.getResource("/res/app.png")));
 		setModal(true);
 		setBounds(100, 100, 392, 317);
 		_actives = actives;
@@ -118,7 +118,7 @@ public class frmActiveChooser extends JDialog {
 				}
 			});
 			buttonPlus.setBorder(BorderFactory.createEmptyBorder());
-			buttonPlus.setIcon(new ImageIcon(".\\res\\plus.png"));
+			buttonPlus.setIcon(new ImageIcon(frmActiveChooser.class.getResource("/res/plus.png")));
 			panel_eq.add(buttonPlus);
 			JButton buttonMinus = new JButton("");
 			buttonMinus.addActionListener(new ActionListener() {
@@ -131,7 +131,7 @@ public class frmActiveChooser extends JDialog {
 				}
 			});
 			buttonMinus.setBorder(BorderFactory.createEmptyBorder());
-			buttonMinus.setIcon(new ImageIcon(".\\res\\minus.png"));
+			buttonMinus.setIcon(new ImageIcon(frmActiveChooser.class.getResource("/res/minus.png")));
 			panel_eq.add(buttonMinus);
 			filterPane.add(panel_eq);
 		}

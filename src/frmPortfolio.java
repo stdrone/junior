@@ -1,5 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.Toolkit;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -32,6 +33,7 @@ public class frmPortfolio extends JDialog {
 	public frmPortfolio(AnalyzerPortfolio data) {
 		setTitle("Рассчитанные портфели");
 		setModalityType(ModalityType.APPLICATION_MODAL);
+		setIconImage(Toolkit.getDefaultToolkit().getImage(appMain.class.getResource("/res/app.png")));
 		setModal(true);
 		_data = data;
 		

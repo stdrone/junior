@@ -62,7 +62,7 @@ public class frmLoader extends JDialog {
 	public frmLoader(appMain appMain) {
 		setResizable(false);
 		setTitle("Новые исходные данные");
-		setIconImage(Toolkit.getDefaultToolkit().getImage(".\\res\\app.png"));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(appMain.class.getResource("/res/app.png")));
 		_appMain = appMain;
 		_prices = new SourcePrices();
 		setModal(true);
