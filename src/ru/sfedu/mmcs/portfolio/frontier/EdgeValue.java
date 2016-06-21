@@ -44,7 +44,7 @@ public class EdgeValue extends Edge {
 	}
 	
 	public void setPortfolio(Portfolio portfolio) {
-		_name = StringUtils.join(portfolio._names,",");
+		_name = portfolio.getName();
 		_portfolio = portfolio;
 	}
 
@@ -69,6 +69,13 @@ public class EdgeValue extends Edge {
 			for(int j = _names.size() - 1; j >= 0; --j)
 				X.put(_names.get(j), _alpha.get(j) * value + _beta.get(j));
 			return new ru.sfedu.mmcs.portfolio.Portfolio(X, new Vector2D(value, y)); 
+		}
+		
+		public String getName() {
+			String[] names = _names.toArray(new String[0]);
+			for(int i = names.length - 1; i >= 0; i--)
+				names[i] = StringUtils.substring(names[i], 0, 3);
+			return StringUtils.join(names,", ");
 		}
 	}
 

@@ -69,7 +69,7 @@ public class appMain {
 		if(_chartPanel == null)
 		{
 			Container panel = _frame.getContentPane();
-			_chartPanel = JFrontierChart.createFrontierChartPanel("Зависимость риска и активов от доходности", _data);
+			_chartPanel = JFrontierChart.createFrontierChartPanel("Зависимость риска и состава портфеля от доходности", _data);
 			_chartPanel.Events.addEventListner(new EntityClickListner() {
 				public void entityClicked(EventEntityClick e) {
 					analyzePortfolio(e.getPortfolio());

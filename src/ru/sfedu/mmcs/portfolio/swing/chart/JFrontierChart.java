@@ -71,7 +71,7 @@ public class JFrontierChart extends ChartPanel {
         chartPanel._plot.addChangeListener(chartPanel.new FixAxisListner());
         chartPanel.addChartMouseListener(chartPanel.new ChartClick());
 
-        NumberAxis axisActives = new NumberAxis("Активы");
+        NumberAxis axisActives = new NumberAxis("Активы в портфеле");
         axisActives.setRange(0.0, 1.0);
         axisActives.setAutoRange(false);
         chartPanel._plot.setRangeAxis(1,axisActives);
@@ -102,7 +102,7 @@ public class JFrontierChart extends ChartPanel {
 	}
 	
 	private class FixAxisListner implements PlotChangeListener{
-    	private boolean _changed = false;
+		private boolean _changed = false;
 		@Override
 		public void plotChanged(PlotChangeEvent arg0) {
 			if(!_changed)
@@ -128,10 +128,11 @@ public class JFrontierChart extends ChartPanel {
 					Rectangle2D plotArea = JFrontierChart.this.getScreenDataArea();
 					XYPlot plot = JFrontierChart.this._plot;
 					double chartX = plot.getDomainAxis().java2DToValue(p.getX(), plotArea, plot.getDomainAxisEdge());
-					//double chartY = plot.getRangeAxis().java2DToValue(p.getY(), plotArea, plot.getRangeAxisEdge());
-					JFrontierChart.this.Events.fireEntityClick(
-							new EventEntityClick(JFrontierChart.this, JFrontierChart.this._frontier.calcPortfolio(new Vector2D(chartX, 0)))
-						);
+					Portfolio portfolio = JFrontierChart.this._frontier.calcPortfolio(new Vector2D(chartX, 0));
+					if(portfolio != null)
+						JFrontierChart.this.Events.fireEntityClick(
+								new EventEntityClick(JFrontierChart.this, portfolio)
+							);
 				}
 			}
 		}

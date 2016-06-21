@@ -40,7 +40,7 @@ public class DataSetFrontier extends AbstractXYDataset {
 	@Override
 	public Comparable getSeriesKey(int series) {
 		if(_frontier.length > 0)
-			return "Граница " + _frontier[series].getName();
+			return _frontier[series].getName();
 		return "";
 	}
 }

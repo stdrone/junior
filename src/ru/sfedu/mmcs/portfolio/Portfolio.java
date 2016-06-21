@@ -38,6 +38,9 @@ public class Portfolio {
 	}
 	
 	public String getName() {
-		return StringUtils.join(_names,", ");
+		String[] names = _names.clone();
+		for(int i = names.length - 1; i >= 0; i--)
+			names[i] = StringUtils.substring(names[i], 0, 3);
+		return StringUtils.join(names,", ");
 	}
 }

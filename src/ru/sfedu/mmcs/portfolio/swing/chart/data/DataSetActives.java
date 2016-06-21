@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.math3.util.Pair;
 import org.jfree.data.xy.AbstractXYDataset;
 
@@ -67,6 +68,6 @@ public class DataSetActives extends AbstractXYDataset {
 	@SuppressWarnings("rawtypes")
 	@Override
 	public Comparable getSeriesKey(int series) {
-		return "Доля " + _names.get(series);
+		return StringUtils.substring(_names.get(series),0,3);
 	}
 }

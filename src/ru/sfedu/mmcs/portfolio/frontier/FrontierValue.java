@@ -93,7 +93,12 @@ public class FrontierValue extends Frontier {
 		
 		double high = - 2 * a[0] / a[1];
 		if(high > minM && high <= maxM)
-			addOptimalPoint("Отношение Шарпа", calcPortfolio(new Vector2D(high, a[0] + high*a[1] + high*high*a[2])));
+			addOptimalPoint("Шарп", calcPortfolio(new Vector2D(high, a[0] + high*a[1] + high*high*a[2])));
+		
+		high = - a[1] / (2 * a[2]); 
+		if(high >= minM && high < maxM)
+			addOptimalPoint("Вершина", calcPortfolio(new Vector2D(high, a[0] + high*a[1] + high*high*a[2])));
+
 		
 		MethodGame m = new MethodGame(_data, edge.calcPortfolio(minM));
 		addOptimalPoint("Игра", m.calculcatePortfolio(null));
