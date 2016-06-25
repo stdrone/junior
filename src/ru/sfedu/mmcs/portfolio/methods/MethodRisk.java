@@ -33,8 +33,8 @@ public class MethodRisk extends MethodValue {
 		if(d >= 0)
 		{
 			d = Math.sqrt(d);
-			double l21 = (-b + d);
-			double l22 = (-b - d);
+			double l21 = (-b + d)/a;
+			double l22 = (-b - d)/a;
 			
 			double l11 = (eVm - l21*eVe) / 2.0;
 			double l12 = (eVm - l22*eVe) / 2.0;
